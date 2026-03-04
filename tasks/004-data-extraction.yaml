@@ -1,0 +1,15 @@
+id: "004"
+title: data-extraction
+type: integration
+risk: high
+depends_on: ["003"]
+context_files:
+  - src/overlay/content.js
+done_when:
+  - Extract Name, Phone, Website, and Rating from the active business listing
+  - Store extracted data in a structured JavaScript object
+  - Handle cases where some information (like website) is missing
+validate:
+  - grep "extractData" src/overlay/content.js
+  - grep "phone" src/overlay/content.js
+status: pending

@@ -1,0 +1,15 @@
+id: "006"
+title: export-functionality
+type: integration
+risk: medium
+depends_on: ["005"]
+context_files:
+  - src/overlay/content.js
+done_when:
+  - Add an "Export CSV" button to the UI overlay
+  - Implement logic to convert collected leads to CSV format
+  - Trigger a browser download of the CSV file
+validate:
+  - grep "csv" src/overlay/content.js
+  - grep "Blob" src/overlay/content.js
+status: pending

@@ -1,0 +1,17 @@
+id: "005"
+title: ui-overlay
+type: frontend
+risk: medium
+depends_on: ["004"]
+context_files:
+  - src/overlay/content.js
+  - src/overlay/styles.css
+  - src/overlay/index.html
+done_when:
+  - Inject the HTML fragment into the Google Maps page
+  - Display extracted data in the floating UI panel
+  - Apply glassmorphism or premium styling to the panel
+validate:
+  - grep "appendChild" src/overlay/content.js
+  - grep "backdrop-filter" src/overlay/styles.css
+status: pending

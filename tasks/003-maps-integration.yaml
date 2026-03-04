@@ -1,0 +1,15 @@
+id: "003"
+title: maps-integration
+type: integration
+risk: medium
+depends_on: ["002"]
+context_files:
+  - src/overlay/content.js
+done_when:
+  - Implement logic in content.js to detect Google Maps business listing elements
+  - Log detected business names to the console for verification
+  - Ensure script runs on google.com/maps
+validate:
+  - grep "google.com/maps" src/overlay/content.js
+  - grep "querySelectorAll" src/overlay/content.js 
+status: pending
