@@ -1,17 +1,20 @@
 id: "002"
-title: scaffold-project
-type: frontend
-risk: low
+title: "scaffold-project"
+type: "frontend"
+risk: "low"
 depends_on: []
-context_files: []
+context_files:
+  - "src/overlay/content.js"
+  - "src/overlay/styles.css"
+  - "src/overlay/index.html"
 done_when:
-  - Create directory structure: src/overlay/
-  - Create src/overlay/content.js (empty structure)
-  - Create src/overlay/styles.css (basic styling)
-  - Create src/overlay/index.html (HTML fragment for overlay)
+  - "Create directory structure: src/overlay/"
+  - "Create src/overlay/content.js (empty structure)"
+  - "Create src/overlay/styles.css (basic styling)"
+  - "Create src/overlay/index.html (HTML fragment for overlay)"
 validate:
-  - test -d src/overlay
-  - test -f src/overlay/content.js
-  - test -f src/overlay/styles.css
-  - test -f src/overlay/index.html
-status: pending
+  - "test -d \"src/overlay\""
+  - "test -f \"src/overlay/content.js\""
+  - "test -f \"src/overlay/styles.css\""
+  - "test -f \"src/overlay/index.html\""
+status: "pending"
