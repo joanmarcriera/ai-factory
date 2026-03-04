@@ -6,8 +6,10 @@ depends_on: []
 context_files:
   - "src/hello.py"
 done_when:
-  - "Create a file named hello.py in the src/ directory that prints \"Hello from AI Factory\""
+  - "The file src/hello.py exists"
+  - "The file src/hello.py contains: print(\"Hello from AI Factory\")"
 validate:
   - "test -f \"src/hello.py\""
+  - "grep \"print\" src/hello.py"
   - "uv run python src/hello.py | grep -q \"Hello from AI Factory\""
 status: "pending"

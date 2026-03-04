@@ -8,13 +8,14 @@ context_files:
   - "src/overlay/styles.css"
   - "src/overlay/index.html"
 done_when:
-  - "Create directory structure: src/overlay/"
-  - "Create src/overlay/content.js (empty structure)"
-  - "Create src/overlay/styles.css (basic styling)"
-  - "Create src/overlay/index.html (HTML fragment for overlay)"
+  - "Directory src/overlay/ exists"
+  - "File src/overlay/content.js contains basic placeholder code"
+  - "File src/overlay/styles.css contains basic placeholder CSS"
+  - "File src/overlay/index.html contains basic placeholder HTML"
 validate:
   - "test -d \"src/overlay\""
   - "test -f \"src/overlay/content.js\""
+  - "grep \"function\" src/overlay/content.js"
   - "test -f \"src/overlay/styles.css\""
   - "test -f \"src/overlay/index.html\""
 status: "pending"

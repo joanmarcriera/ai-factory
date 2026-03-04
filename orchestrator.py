@@ -14,13 +14,14 @@ def load_env():
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
                 key, value = line.split("=", 1)
-                os.environ[key.strip()] = value.strip()
+                value = value.strip().strip('"').strip("'")
+                os.environ[key.strip()] = value
 
 load_env()
 
 # --- Configuration ---
 CONFIG = {
-    "model": os.environ.get("AI_MODEL", "haiku"),
+    "model": os.environ.get("AI_MODEL", "anthropic/claude-3-5-sonnet-latest"),
     "max_retries": 2,
     "log_file": ".orchestrator/log.txt",
     "verbose": 0  # 0: normal, 1: verbose, 2: debug
@@ -43,37 +44,45 @@ def log(message, level=0):
 
 def get_ready_tasks():
     """Return tasks with status=pending and all dependencies done, sorted by ID."""
-    ready = []
+    all_tasks = {}
     tasks_dir = Path("tasks")
     if not tasks_dir.exists():
         return []
 
+    # First pass: load all tasks to build a map by ID
     task_files = sorted(tasks_dir.glob("*.yaml"))
     for task_file in task_files:
         try:
-            task = yaml.safe_load(task_file.read_text())
+            content = yaml.safe_load(task_file.read_text())
+            if content and "id" in content:
+                all_tasks[str(content["id"])] = {
+                    "file": task_file,
+                    "data": content
+                }
         except Exception as e:
             log(f"Error loading {task_file}: {e}", level=0)
-            continue
-        
+
+    ready = []
+    for task_id, task_info in all_tasks.items():
+        task = task_info["data"]
         if task.get("status") != "pending":
             continue
         
         deps_met = True
-        for dep in task.get("depends_on", []):
-            dep_path = Path(f"tasks/{dep}.yaml")
-            if not dep_path.exists():
+        for dep_id in task.get("depends_on", []):
+            dep_id_str = str(dep_id)
+            if dep_id_str not in all_tasks:
                 deps_met = False
-                log(f"Dependency {dep} for task {task.get('id')} not found.", level=0)
+                log(f"Dependency {dep_id_str} for task {task_id} not found in any file.", level=0)
                 break
             
-            dep_task = yaml.safe_load(dep_path.read_text())
-            if dep_task.get("status") != "done":
+            if all_tasks[dep_id_str]["data"].get("status") != "done":
                 deps_met = False
                 break
         
         if deps_met:
-            ready.append((task_file, task))
+            ready.append((task_info["file"], task))
+    
     return ready
 
 def execute_task(task_file, task):
@@ -83,9 +92,19 @@ def execute_task(task_file, task):
              "\n".join(f"- {item}" for item in task['done_when']) + \
              "\n\nGenerate necessary code changes."
     
+    # Aider likes the model name without the 'anthropic/' prefix if using its own logic,
+    # but litellm (which aider uses) sometimes gets confused. 
+    # Let's try passing the model exactly as the user provides, but if it fails, 
+    # we can try to strip the provider.
+    aider_model = CONFIG["model"]
+    if "/" in aider_model:
+        # If it's a known provider, aider often wants just the model name 
+        # but let's be careful. Litellm error suggested it NEEDS provider.
+        pass
+
     cmd = [
         "uv", "run", "aider",
-        "--model", CONFIG["model"],
+        "--model", aider_model,
         "--message", prompt,
         "--yes",
         "--no-git-commit",
@@ -130,15 +149,29 @@ def execute_task(task_file, task):
         log(f"AIDER STDOUT:\n{result.stdout}", level=2)
         log(f"AIDER STDERR:\n{result.stderr}", level=2)
         return
-    else:
-        log(f"{task['id']} Aider finished successfully", level=1)
-        log(f"AIDER STDOUT:\n{result.stdout}", level=2)
-        
-        # Verify that context files are NOT empty if they were supposed to be created
-        for cf in context_files:
-            cf_path = Path(cf)
-            if cf_path.exists() and cf_path.stat().st_size == 0:
-                log(f"WARNING: {cf} is EMPTY. Aider might have failed to write content.", level=0)
+    
+    # Check for "false success" where aider exits 0 but litellm failed
+    stdout_lower = result.stdout.lower() if result.stdout else ""
+    stderr_lower = result.stderr.lower() if result.stderr else ""
+    if "badrequesterror" in stdout_lower or "llm provider not provided" in stdout_lower:
+        log(f"{task['id']} ✗ Aider reported success but LiteLLM failed to route the model.", level=0)
+        log(f"--- AIDER STDOUT ---\n{result.stdout}", level=0)
+        return
+
+    log(f"{task['id']} Aider finished successfully", level=1)
+    log(f"AIDER STDOUT:\n{result.stdout}", level=2)
+    
+    # Verify that context files are NOT empty
+    any_empty = False
+    for cf in context_files:
+        cf_path = Path(cf)
+        if cf_path.exists() and cf_path.stat().st_size == 0:
+            log(f"ERROR: {cf} is EMPTY. Aider failed to write content.", level=0)
+            any_empty = True
+    
+    if any_empty:
+        log(f"{task['id']} ✗ Task failed due to empty context files.", level=0)
+        return
 
     # Validation
     validation_passed = True
@@ -148,11 +181,12 @@ def execute_task(task_file, task):
         if res.returncode != 0:
             validation_passed = False
             log(f"{task['id']} ✗ Validation failed: {cmd_str}", level=0)
-            log(f"Val STDERR: {res.stderr}", level=1)
-            log(f"Val STDOUT: {res.stdout}", level=1)
-            # Full debug info on failure
+            log(f"Val STDERR: {res.stderr}", level=0)
+            log(f"Val STDOUT: {res.stdout}", level=0)
+            # ALWAYS show Aider output on failure if we haven't already
             if CONFIG["verbose"] < 2:
-                log(f"Run with -vv to see full Aider logs for debugging.", level=0)
+                log(f"--- AIDER STDOUT ---\n{result.stdout}", level=0)
+                log(f"--- AIDER STDERR ---\n{result.stderr}", level=0)
             break
         else:
             log(f"PASSED: {cmd_str}", level=1)

@@ -26,6 +26,10 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - This ensures the validation runs in the same environment as the orchestrator.
 - Example: `uv run python src/my_script.py`
 
+### 7. Robust Validation
+- Do NOT just use `test -f`. Use `grep` or other tools to ensure the file is NOT EMPTY and contains expected markers.
+- Example: `grep "def my_function" src/file.py`
+
 ### Example
 ```yaml
 id: "999"
@@ -39,7 +43,8 @@ done_when:
   - "File src/example.py exists"
   - "File prints 'Success'"
 validate:
-  - "test -f src/example.py"
+  - "test -f \"src/example.py\""
+  - "grep \"print\" src/example.py"
   - "uv run python src/example.py | grep -q \"Success\""
 status: "pending"
 ```
