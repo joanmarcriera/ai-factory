@@ -201,6 +201,16 @@ def execute_task(task_file, task):
         task["completed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task_file.write_text(yaml.dump(task, sort_keys=False))
         log(f"{task['id']} ✓ All validations passed.", level=0)
+        
+        # Auto-commit the changes for this task
+        commit_msg = f"chore(task): Complete task {task['id']} - {task['title']}"
+        subprocess.run(["git", "add", "."], check=False)
+        commit_result = subprocess.run(["git", "commit", "-m", commit_msg], check=False, capture_output=True, text=True)
+        if commit_result.returncode == 0:
+            log(f"Committed changes for task {task['id']}", level=1)
+        else:
+            log(f"No changes to commit for task {task['id']}", level=1)
+            
         return True
     else:
         log(f"{task['id']} ✗ Task failed.", level=0)
