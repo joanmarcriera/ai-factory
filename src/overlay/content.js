@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Local Business Visibility Platform
 // @namespace https://www.google.com/maps/*
-// @version 1.3
+// @version 1.4
 // @description Overlay for Google Maps to extract business data
 // @match https://www.google.com/maps/*
 // @grant none
@@ -100,16 +100,49 @@ function extractData(element) {
 }
 
 /**
- * Processes the extracted business data and updates the UI.
- * @param {Object[]} businessData - An array of extracted business data.
+ * Calculates the lead score for a given business data object.
+ * @param {Object} businessData - The business data object.
+ * @returns {number} - The lead score.
  */
-function processBusinessData(businessData) {
+function calculateLeadScore(businessData) {
+  let score = 0;
+  
+  // Add points if the website is 'N/A' or missing
+  if (businessData.website === 'N/A' || !businessData.website) {
+    score += 2;
+  }
+  
+  // Add points if the phone is 'N/A' or missing
+  if (businessData.phone === 'N/A' || !businessData.phone) {
+    score += 2;
+  }
+  
+  return score;
+}
+
+/**
+ * Processes the extracted business data and updates the UI.
+ */
+function processBusinessData() {
+  // Find all business listing elements using a more robust selector
+  const robustBusinessElements = document.querySelectorAll('[role="article"]');
+  
+  // Extract data from each business listing
+  const businessData = [];
+  robustBusinessElements.forEach(element => {
+    const data = extractData(element);
+    // Calculate the lead score for the business data
+    data.leadScore = calculateLeadScore(data);
+    businessData.push(data);
+  });
+  
   // Remove the loading text
   if (loadingText) {
     loadingText.remove();
     loadingText = null;
   }
 
+  // Display the business data in the overlay panel
   const businessListingsElement = document.getElementById('business-listings');
   businessListingsElement.innerHTML = '';
 
@@ -139,44 +172,6 @@ function processBusinessData(businessData) {
 
     businessListingsElement.appendChild(businessElement);
   });
-}
-
-/**
- * Calculates the lead score for a given business data object.
- * @param {Object} businessData - The business data object.
- * @returns {number} - The lead score.
- */
-function calculateLeadScore(businessData) {
-  let score = 0;
-  
-  // Add points if the website is 'N/A' or missing
-  if (businessData.website === 'N/A' || !businessData.website) {
-    score += 2;
-  }
-  
-  // Add points if the phone is 'N/A' or missing
-  if (businessData.phone === 'N/A' || !businessData.phone) {
-    score += 2;
-  }
-  
-  return score;
-}
-
-function processBusinessData() {
-  // Find all business listing elements using a more robust selector
-  const robustBusinessElements = document.querySelectorAll('[role="article"]');
-  
-  // Extract data from each business listing
-  const businessData = [];
-  robustBusinessElements.forEach(element => {
-    const data = extractData(element);
-    // Calculate the lead score for the business data
-    data.leadScore = calculateLeadScore(data);
-    businessData.push(data);
-  });
-  
-  // Display the business data in the overlay panel
-  processBusinessData(businessData);
 
   // Apply visual highlights
   applyVisualHighlights(robustBusinessElements, businessData);

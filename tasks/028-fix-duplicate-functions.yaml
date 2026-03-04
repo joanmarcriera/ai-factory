@@ -1,0 +1,23 @@
+id: 028
+title: fix-duplicate-functions
+type: bugfix
+risk: high
+depends_on:
+- '027'
+context_files:
+- src/overlay/content.js
+done_when:
+- Find the two separate definitions of function processBusinessData in src/overlay/content.js
+- Consolidate them into a SINGLE function processBusinessData() that performs both
+  the data extraction/UI injection AND the loadingText removal
+- Ensure there is only one function processBusinessData in the entire file
+- Increment the @version to 1.4 in the Tampermonkey block
+validate:
+- '[ $(grep -c "function processBusinessData" src/overlay/content.js) -eq 1 ]'
+- grep "@version 1.4" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '4300'
+  tokens_received: '2200'
+  cost: 0.0038
+completed_at: '2026-03-04 23:27:51'
