@@ -1,15 +1,21 @@
-id: "007"
-title: "manual-testing-guide"
-type: "documentation"
-risk: "low"
-depends_on: ["006"]
+id: '007'
+title: manual-testing-guide
+type: documentation
+risk: low
+depends_on:
+- '006'
 context_files:
-  - "TESTING.md"
+- TESTING.md
 done_when:
-  - "Create a file named TESTING.md"
-  - "Write step-by-step instructions on how to install the script in Tampermonkey"
-  - "Write instructions on how to test the overlay on Google Maps"
+- Write step-by-step instructions on how to install the script in Tampermonkey inside
+  TESTING.md
+- Write instructions on how to test the overlay on Google Maps inside TESTING.md
 validate:
-  - 'test -f "TESTING.md"'
-  - 'grep -i "Tampermonkey" TESTING.md'
-status: "pending"
+- test -s "TESTING.md"
+- grep -i "Tampermonkey" TESTING.md
+status: done
+metrics:
+  tokens_sent: '1700'
+  tokens_received: '195'
+  cost: 0.00067
+completed_at: '2026-03-04 22:49:25'
