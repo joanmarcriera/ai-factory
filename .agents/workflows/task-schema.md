@@ -40,6 +40,10 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - If a task has completed successfully (`done`), it is a proven historical record of what worked. Altering it (e.g. adding extra numbers or changing its prompt) destroys our understanding of which prompts actually succeeded.
 - If you need to re-run, modify, or iterate on a completed task, you must explicitly change its `status` back to `"pending"` before making any other changes to the file.
 
+### 10. Human Validation
+- If the project results in a user-facing tool (like a browser extension, UI, or interactive script), the sequence of tasks **MUST** include a final task dedicated to generating human-readable instructions.
+- This ensures the user knows exactly how to test the final product manually.
+
 ### Example
 ```yaml
 id: "999"

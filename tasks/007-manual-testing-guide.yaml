@@ -1,0 +1,15 @@
+id: "007"
+title: "manual-testing-guide"
+type: "documentation"
+risk: "low"
+depends_on: ["006"]
+context_files:
+  - "TESTING.md"
+done_when:
+  - "Create a file named TESTING.md"
+  - "Write step-by-step instructions on how to install the script in Tampermonkey"
+  - "Write instructions on how to test the overlay on Google Maps"
+validate:
+  - 'test -f "TESTING.md"'
+  - 'grep -i "Tampermonkey" TESTING.md'
+status: "pending"
