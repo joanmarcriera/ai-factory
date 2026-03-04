@@ -1,0 +1,21 @@
+id: 029
+title: format-indentation
+type: chore
+risk: low
+depends_on:
+- 028
+context_files:
+- src/overlay/content.js
+done_when:
+- Reformat the entire src/overlay/content.js file to strictly use 2 spaces for indentation
+- Ensure no hard tabs are used
+- Increment the @version to 1.5 in the Tampermonkey block
+validate:
+- grep "@version 1.5" src/overlay/content.js
+- '! grep -P "\t" src/overlay/content.js'
+status: done
+metrics:
+  tokens_sent: '4300'
+  tokens_received: '2100'
+  cost: 0.0037
+completed_at: '2026-03-04 23:29:31'
