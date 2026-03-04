@@ -1,0 +1,15 @@
+id: "001"
+title: hello-world
+type: test
+risk: low
+depends_on: []
+context_files: []
+done_when:
+  - Create a file named hello.py in the project root that prints "Hello from AI Factory"
+validate:
+  - python3 hello.py | grep "Hello from AI Factory"
+status: pending
+
+
+
+# You'll have to move to 001-hello.yaml to have a test to run

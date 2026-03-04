@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 
 CONFIG = {
-    "model": "sonnet",
+    "model": "haiku",
     "max_retries": 2,
     "log_file": ".orchestrator/log.txt"
 }
@@ -77,17 +77,33 @@ Generate necessary code changes.
     
     log(f"Executing task {task['id']}: {task['title']}")
     
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    import os
+    env = os.environ.copy()
+    if "ANTHROPIC_API_KEY" not in env:
+        log("CRITICAL ERROR: ANTHROPIC_API_KEY not found in environment!")
+        # Fallback for local testing or interactive use
+        # env["ANTHROPIC_API_KEY"] = input("Enter ANTHROPIC_API_KEY if available: ")
+
+    result = subprocess.run(cmd, capture_output=True, text=True, env=env)
     
     # Extract token info if available
     metrics = {}
     if result.stdout:
         # Regex to capture: Tokens: 2.8k sent, 108 received. Cost: $0.01 message, $0.01 session.
-        match = re.search(r"Tokens:\s*([\d\.k]+)\s*sent,\s*([\d\.k]+)\s*received\.\s*Cost:\s*\$([\d\.]+)\s*message", result.stdout)
+        # Handles case-insensitivity, optional colons, and decimal/k-notation.
+        match = re.search(r"Tokens:?\s*([\d\.k]+)\s*sent,\s*([\d\.k]+)\s*received\.?\s*Cost:?\s*\$([\d\.]+)", result.stdout, re.IGNORECASE)
         if match:
+            # Convert 'k' notation to numeric string
+            def k_to_num(s):
+                if 'k' in s.lower():
+                    try:
+                        return f"{float(s.lower().replace('k', '')) * 1000:.0f}"
+                    except: return s
+                return s
+
             metrics = {
-                "tokens_sent": match.group(1),
-                "tokens_received": match.group(2),
+                "tokens_sent": k_to_num(match.group(1)),
+                "tokens_received": k_to_num(match.group(2)),
                 "cost": float(match.group(3))
             }
             log(f"Metrics: Sent={metrics['tokens_sent']}, Received={metrics['tokens_received']}, Cost=${metrics['cost']:.4f}")
@@ -100,8 +116,9 @@ Generate necessary code changes.
         return
     else:
         log(f"{task['id']} Aider finished successfully (exit code 0)")
-        # log(f"Aider STDOUT: {result.stdout}") # Commented out to reduce log noise, keep if needed
-        # log(f"Aider STDERR: {result.stderr}")
+        if not metrics:
+            log("Warning: Aider finished but no metrics were extracted.")
+            # log(f"Aider STDOUT for debug: {result.stdout}")
 
     # Check if any changes were actually made (optional but helpful)
     # Aider should have created hello.py for task 001
