@@ -75,6 +75,7 @@ function injectSelfContainedUI() {
   const overlayContent = document.createElement('div');
   overlayContent.id = 'overlay-content';
   overlayContent.classList.add('overlay-panel');
+  overlayContent.style.zIndex = '999999 !important'; // Add this line to set the z-index
 
   const title = document.createElement('h1');
   title.textContent = 'Business Listings';
@@ -98,6 +99,7 @@ function injectSelfContainedUI() {
       max-width: 300px;
       max-height: 80vh;
       overflow-y: auto;
+      z-index: 999999 !important; /* Add this line to set the z-index */
     }
     .business-listing {
       border: 1px solid #ccc;

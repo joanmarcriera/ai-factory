@@ -1,0 +1,16 @@
+id: "023"
+title: "structural-extraction"
+type: "integration"
+risk: "high"
+depends_on: ["022"]
+context_files:
+  - "src/overlay/content.js"
+done_when:
+  - "Re-write the extractData function to handle Google Maps obfuscation"
+  - "Extract the name directly from the first element's aria-label attribute (e.g., element.getAttribute('aria-label') || 'N/A')"
+  - "Extract the exact website matching by finding an <a> tag where href starts with http and does not contain google.com"
+  - "DO NOT use aria-label matches like aria-label^=\"Phone:\" as they do not work on Google Maps"
+validate:
+  - 'grep "getAttribute(\x27aria-label\x27)" src/overlay/content.js'
+  - 'grep -v "aria-label^=\"Phone:\"" src/overlay/content.js'
+status: "pending"

@@ -1,0 +1,15 @@
+id: "022"
+title: "idempotent-updates"
+type: "bugfix"
+risk: "high"
+depends_on: ["021"]
+context_files:
+  - "src/overlay/content.js"
+done_when:
+  - "Modify addExportButton so that if an element with class .export-button already exists, it returns immediately and prevents duplicates"
+  - "Modify applyVisualHighlights to add the class ai-factory-highlighted to the element after adding the text"
+  - "Modify applyVisualHighlights so that if the element already has the class ai-factory-highlighted, it skips it and does not append duplicate text"
+validate:
+  - 'grep "ai-factory-highlighted" src/overlay/content.js'
+  - 'grep "querySelector(\x27.export-button\x27)" src/overlay/content.js'
+status: "pending"

@@ -1,0 +1,19 @@
+id: '021'
+title: fix-zindex
+type: bugfix
+risk: low
+depends_on:
+- '020'
+context_files:
+- src/overlay/content.js
+done_when:
+- Update the CSS for .overlay-panel in injectSelfContainedUI
+- 'Ensure .overlay-panel explicitly contains z-index: 999999 !important;'
+validate:
+- 'grep "z-index: 999999" src/overlay/content.js'
+status: done
+metrics:
+  tokens_sent: '3900'
+  tokens_received: '2100'
+  cost: 0.0036
+completed_at: '2026-03-04 23:19:49'
