@@ -1,0 +1,22 @@
+id: '012'
+title: competitor-context
+type: integration
+risk: medium
+depends_on:
+- '011'
+context_files:
+- src/overlay/content.js
+done_when:
+- Create a function called aggregateCompetitorStats that iterates through all parsed
+  businessData objects
+- Calculate the exact string 'Average Rating:' for the current page of results
+- Display 'Average Rating:' in the UI overlay alongside the total number of competitors
+validate:
+- grep "aggregateCompetitorStats" src/overlay/content.js
+- grep "Average Rating:" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2800'
+  tokens_received: '1500'
+  cost: 0.0026
+completed_at: '2026-03-04 23:02:50'

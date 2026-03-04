@@ -17,3 +17,15 @@
    - Displaying the business data in the overlay
    - Generating and downloading the CSV file
 5. Ensure that the overlay does not interfere with the normal functionality of Google Maps.
+
+## Verifying Visual Highlights for High Value Leads
+
+1. Observe the business listings in the overlay.
+2. Identify any listings that have a '🔥 High Value Lead' label.
+3. Verify that the corresponding business element on the Google Maps page has a red border, indicating it is a high value lead.
+
+## Verifying Lead Scores in the CSV Export
+
+1. Generate the CSV export by clicking the "Export CSV" button.
+2. Open the downloaded CSV file.
+3. Verify that the "Lead Score" column contains the correct lead score values for each business listing. A higher lead score indicates a higher value lead.

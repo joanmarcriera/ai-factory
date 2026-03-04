@@ -1,0 +1,23 @@
+id: 009
+title: self-contained-ui
+type: frontend
+risk: high
+depends_on:
+- 008
+context_files:
+- src/overlay/content.js
+done_when:
+- Create a function called injectSelfContainedUI that dynamically creates a <style>
+  tag and an overlay <div>
+- Append the <style> tag to the document head
+- Append the overlay <div> to the document body
+- Ensure the UI renders visibly on the page without external CSS or HTML files
+validate:
+- grep "injectSelfContainedUI" src/overlay/content.js
+- grep -E "createElement.*style" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2900'
+  tokens_received: '1400'
+  cost: 0.0024
+completed_at: '2026-03-04 23:02:05'

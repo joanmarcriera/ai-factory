@@ -1,0 +1,23 @@
+id: '016'
+title: fix-truncation
+type: bugfix
+risk: high
+depends_on:
+- '015'
+context_files:
+- src/overlay/content.js
+done_when:
+- 'Completely re-write the missing functions: extractData, displayBusinessData, injectSelfContainedUI,
+  and aggregateCompetitorStats inside content.js'
+- Remove any // Rest of the code remains the same comments
+- Ensure no functions are omitted and the code is unbroken
+validate:
+- grep "function displayBusinessData" src/overlay/content.js
+- grep "function extractData" src/overlay/content.js
+- grep "function injectSelfContainedUI" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2600'
+  tokens_received: '1800'
+  cost: 0.0029
+completed_at: '2026-03-04 23:08:10'

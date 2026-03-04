@@ -1,0 +1,23 @@
+id: '013'
+title: visual-highlighting
+type: frontend
+risk: high
+depends_on:
+- '012'
+context_files:
+- src/overlay/content.js
+done_when:
+- Create a function called applyVisualHighlights that modifies the actual Google Maps
+  DOM elements
+- Add a visible CSS border to Google Maps DOM elements that have a high lead score
+- "Inject a small text node saying '\U0001F525 High Value Lead' into the Google Maps\
+  \ DOM element"
+validate:
+- grep "applyVisualHighlights" src/overlay/content.js
+- grep "High Value Lead" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '3000'
+  tokens_received: '812'
+  cost: 0.0018
+completed_at: '2026-03-04 23:02:59'

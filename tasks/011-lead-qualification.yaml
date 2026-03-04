@@ -1,0 +1,22 @@
+id: '011'
+title: lead-qualification
+type: integration
+risk: medium
+depends_on:
+- '010'
+context_files:
+- src/overlay/content.js
+done_when:
+- Create a function called calculateLeadScore that evaluates a businessData object
+- Add points to the score if website is 'N/A' or missing
+- Add points to the score if phone is 'N/A' or missing
+- Add the resulting score to the businessData object
+validate:
+- grep "calculateLeadScore" src/overlay/content.js
+- grep "score" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2900'
+  tokens_received: '1300'
+  cost: 0.0024
+completed_at: '2026-03-04 23:02:34'

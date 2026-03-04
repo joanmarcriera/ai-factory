@@ -1,0 +1,23 @@
+id: '015'
+title: update-testing-guide
+type: documentation
+risk: low
+depends_on:
+- '014'
+context_files:
+- TESTING.md
+done_when:
+- Do NOT modify any Javascript files. You must only edit the markdown file.
+- "Write instructions exactly inside TESTING.md specifically mentioning testing the\
+  \ new '\U0001F525 High Value Lead' visual highlights"
+- Write instructions exactly inside TESTING.md instructing the user on how to verify
+  Lead Scores in the CSV export
+validate:
+- test -s "TESTING.md"
+- grep "High Value Lead" TESTING.md
+status: done
+metrics:
+  tokens_sent: '2200'
+  tokens_received: '314'
+  cost: 0.00095
+completed_at: '2026-03-04 23:03:51'

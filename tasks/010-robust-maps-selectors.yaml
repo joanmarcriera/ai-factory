@@ -1,0 +1,22 @@
+id: '010'
+title: robust-maps-selectors
+type: integration
+risk: high
+depends_on:
+- 009
+context_files:
+- src/overlay/content.js
+done_when:
+- Update the business elements selector to generically look for role="article" or
+  similar broad Google Maps item selectors
+- Assign these robust elements to a variable named robustBusinessElements
+- Ensure data extraction does not break when typical classes are obfuscated
+validate:
+- grep "robustBusinessElements" src/overlay/content.js
+- grep "role=\"article\"" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2800'
+  tokens_received: '1400'
+  cost: 0.0025
+completed_at: '2026-03-04 23:02:21'

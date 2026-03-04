@@ -1,0 +1,20 @@
+id: '014'
+title: export-enhancement
+type: integration
+risk: low
+depends_on:
+- '013'
+context_files:
+- src/overlay/content.js
+done_when:
+- Modify the generateCSV headers to exactly include the string 'Lead Score'
+- Ensure the generated CSV rows include the calculated score and any missing data
+  flags
+validate:
+- grep "Lead Score" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2200'
+  tokens_received: '1100'
+  cost: 0.0019
+completed_at: '2026-03-04 23:03:10'

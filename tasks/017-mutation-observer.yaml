@@ -1,0 +1,24 @@
+id: '017'
+title: mutation-observer
+type: integration
+risk: high
+depends_on:
+- '016'
+context_files:
+- src/overlay/content.js
+done_when:
+- Remove window.addEventListener('load')
+- Implement a setInterval or MutationObserver to continuously check for [role="article"]
+  elements on the page
+- Only inject the UI and process businesses when the elements are actually found
+- Ensure we don't inject the UI multiple times (keep track with a flag or check if
+  overlay exists)
+validate:
+- grep "setInterval" src/overlay/content.js || grep "MutationObserver" src/overlay/content.js
+- grep -v "window.addEventListener(\x27load\x27" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '3500'
+  tokens_received: '2100'
+  cost: 0.0035
+completed_at: '2026-03-04 23:08:30'
