@@ -91,6 +91,11 @@ def execute_task(task_file, task):
     prompt = f"Task: {task['title']}\n\nComplete when:\n" + \
              "\n".join(f"- {item}" for item in task['done_when']) + \
              "\n\nGenerate necessary code changes."
+             
+    # Inject workflows / conventions to ensure determinism
+    conventions_file = Path(".agents/workflows/coding-conventions.md")
+    if conventions_file.exists():
+        prompt += f"\n\n--- THE FOLLOWING ARE CRITICAL PROJECT CONVENTIONS ---\n{conventions_file.read_text()}\n------------------------------------------------------\n"
     
     # Aider likes the model name without the 'anthropic/' prefix if using its own logic,
     # but litellm (which aider uses) sometimes gets confused. 
@@ -153,8 +158,8 @@ def execute_task(task_file, task):
     # Check for "false success" where aider exits 0 but litellm failed
     stdout_lower = result.stdout.lower() if result.stdout else ""
     stderr_lower = result.stderr.lower() if result.stderr else ""
-    if "badrequesterror" in stdout_lower or "llm provider not provided" in stdout_lower:
-        log(f"{task['id']} ✗ Aider reported success but LiteLLM failed to route the model.", level=0)
+    if any(err in stdout_lower for err in ["badrequesterror", "llm provider not provided", "notfounderror"]):
+        log(f"{task['id']} ✗ Aider reported success but LiteLLM/API failed to process the model.", level=0)
         log(f"--- AIDER STDOUT ---\n{result.stdout}", level=0)
         return
 
@@ -196,8 +201,10 @@ def execute_task(task_file, task):
         task["completed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task_file.write_text(yaml.dump(task, sort_keys=False))
         log(f"{task['id']} ✓ All validations passed.", level=0)
+        return True
     else:
         log(f"{task['id']} ✗ Task failed.", level=0)
+        return False
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AI Factory Orchestrator")
@@ -206,9 +213,23 @@ if __name__ == "__main__":
     
     CONFIG["verbose"] = args.verbose
     
-    tasks = get_ready_tasks()
-    if not tasks:
-        log("No tasks ready for execution.", level=0)
-    
-    for task_file, task in tasks:
-        execute_task(task_file, task)
+    failed_tasks = set()
+    while True:
+        tasks = get_ready_tasks()
+        ready_to_run = [t for t in tasks if str(t[1]['id']) not in failed_tasks]
+        
+        if not ready_to_run:
+            log("No more tasks ready for execution or all remaining tasks are blocked.", level=0)
+            break
+        
+        any_success = False
+        for task_file, task in ready_to_run:
+            success = execute_task(task_file, task)
+            if success:
+                any_success = True
+            else:
+                failed_tasks.add(str(task['id']))
+        
+        # If we didn't succeed at any task in this round, no new dependencies will unlock.
+        if not any_success:
+            break

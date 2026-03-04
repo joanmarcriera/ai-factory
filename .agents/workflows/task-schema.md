@@ -30,6 +30,11 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - Do NOT just use `test -f`. Use `grep` or other tools to ensure the file is NOT EMPTY and contains expected markers.
 - Example: `grep "def my_function" src/file.py`
 
+### 8. Deterministic Prompting (CRITICAL)
+- The `done_when` array is injected directly into the Aider prompt.
+- If your `validate` array checks for a specific string (e.g. `grep "extractData"`), your `done_when` array **MUST EXPLICITLY INSTRUCT** Aider to write that exact string (e.g., "Create a function exactly named 'extractData'").
+- Do not assume Aider will use the same variable/function names you are thinking of unless you enforce it in `done_when`.
+
 ### Example
 ```yaml
 id: "999"

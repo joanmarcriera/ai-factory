@@ -6,7 +6,7 @@ depends_on: ["003"]
 context_files:
   - "src/overlay/content.js"
 done_when:
-  - "Extract Name, Phone, Website, and Rating from the active business listing"
+  - "Create a function called extractData to collect Name, Phone, Website, and Rating from the active business listing element"
   - "Store extracted data in a structured JavaScript object"
   - "Handle cases where some information (like website) is missing"
 validate:

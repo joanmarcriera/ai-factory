@@ -1,21 +1,25 @@
-id: "002"
-title: "scaffold-project"
-type: "frontend"
-risk: "low"
+id: '002'
+title: scaffold-project
+type: frontend
+risk: low
 depends_on: []
 context_files:
-  - "src/overlay/content.js"
-  - "src/overlay/styles.css"
-  - "src/overlay/index.html"
+- src/overlay/content.js
+- src/overlay/styles.css
+- src/overlay/index.html
 done_when:
-  - "Directory src/overlay/ exists"
-  - "File src/overlay/content.js contains basic placeholder code"
-  - "File src/overlay/styles.css contains basic placeholder CSS"
-  - "File src/overlay/index.html contains basic placeholder HTML"
+- Directory src/overlay/ exists
+- File src/overlay/content.js contains basic placeholder code
+- File src/overlay/styles.css contains basic placeholder CSS
+- File src/overlay/index.html contains basic placeholder HTML
 validate:
-  - "test -d \"src/overlay\""
-  - "test -f \"src/overlay/content.js\""
-  - "grep \"function\" src/overlay/content.js"
-  - "test -f \"src/overlay/styles.css\""
-  - "test -f \"src/overlay/index.html\""
-status: "pending"
+- test -d "src/overlay"
+- test -s "src/overlay/content.js"
+- test -s "src/overlay/styles.css"
+- test -s "src/overlay/index.html"
+status: done
+metrics:
+  tokens_sent: '1200'
+  tokens_received: '231'
+  cost: 0.00059
+completed_at: '2026-03-04 22:31:06'

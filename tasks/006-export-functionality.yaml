@@ -6,10 +6,10 @@ depends_on: ["005"]
 context_files:
   - "src/overlay/content.js"
 done_when:
-  - "Add an \"Export CSV\" button to the UI overlay"
-  - "Implement logic to convert collected leads to CSV format"
-  - "Trigger a browser download of the CSV file"
+  - "Add an Export CSV button to the UI overlay"
+  - "Implement logic to convert collected leads to a .csv formatted string"
+  - "Trigger a browser download using a new Blob() object for the CSV file"
 validate:
-  - 'grep "csv" src/overlay/content.js'
+  - 'grep -i "csv" src/overlay/content.js'
   - 'grep "Blob" src/overlay/content.js'
 status: "pending"

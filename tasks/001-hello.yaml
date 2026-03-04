@@ -1,15 +1,20 @@
-id: "001"
-title: "hello-world"
-type: "test"
-risk: "low"
+id: '001'
+title: hello-world
+type: test
+risk: low
 depends_on: []
 context_files:
-  - "src/hello.py"
+- src/hello.py
 done_when:
-  - "The file src/hello.py exists"
-  - "The file src/hello.py contains: print(\"Hello from AI Factory\")"
+- The file src/hello.py exists
+- 'The file src/hello.py contains: print("Hello from AI Factory")'
 validate:
-  - "test -f \"src/hello.py\""
-  - "grep \"print\" src/hello.py"
-  - "uv run python src/hello.py | grep -q \"Hello from AI Factory\""
-status: "pending"
+- test -f "src/hello.py"
+- grep "print" src/hello.py
+- uv run python src/hello.py | grep -q "Hello from AI Factory"
+status: done
+metrics:
+  tokens_sent: '1000'
+  tokens_received: '57'
+  cost: 0.00032
+completed_at: '2026-03-04 22:30:30'

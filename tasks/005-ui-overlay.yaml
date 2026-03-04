@@ -8,9 +8,9 @@ context_files:
   - "src/overlay/styles.css"
   - "src/overlay/index.html"
 done_when:
-  - "Inject the HTML fragment into the Google Maps page"
+  - "Inject the HTML fragment into the Google Maps page using document.body.appendChild"
   - "Display extracted data in the floating UI panel"
-  - "Apply glassmorphism or premium styling to the panel"
+  - "Apply premium styling to the panel, explicitly including backdrop-filter: blur(10px) in styles.css"
 validate:
   - 'grep "appendChild" src/overlay/content.js'
   - 'grep "backdrop-filter" src/overlay/styles.css'
