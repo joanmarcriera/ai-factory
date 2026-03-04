@@ -5,7 +5,7 @@ risk: low
 depends_on: []
 context_files: []
 done_when:
-  - Create hello.py that prints "Hello from AI Factory"
+  - Create a file named hello.py in the project root that prints "Hello from AI Factory"
 validate:
   - python3 hello.py | grep "Hello from AI Factory"
 status: pending
