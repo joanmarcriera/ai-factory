@@ -1,0 +1,19 @@
+id: '026'
+title: bump-version-2
+type: configuration
+risk: low
+depends_on:
+- '025'
+context_files:
+- src/overlay/content.js
+done_when:
+- Find the @version tag in the Tampermonkey block
+- Increment the version from 1.1 to 1.2
+validate:
+- grep "@version 1.2" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2600'
+  tokens_received: '539'
+  cost: 0.0013
+completed_at: '2026-03-04 23:21:43'

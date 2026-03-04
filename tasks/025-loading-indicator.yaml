@@ -1,0 +1,23 @@
+id: '025'
+title: loading-indicator
+type: frontend
+risk: high
+depends_on:
+- '024'
+context_files:
+- src/overlay/content.js
+done_when:
+- Update injectSelfContainedUI so that the overlay initially displays a clear 'Loading...'
+  or 'Scanning Map...' text element
+- Update processBusinessData so that it removes or overwrites the loading text once
+  data is actually extracted and displayed
+- Ensure the loading text only appears when waiting for Google Maps, and disappears
+  once processing is done
+validate:
+- grep "Scanning Map" src/overlay/content.js || grep "Loading" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2400'
+  tokens_received: '644'
+  cost: 0.0014
+completed_at: '2026-03-04 23:21:36'
