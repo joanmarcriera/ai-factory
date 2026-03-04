@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.orchestrator/
+pending_implementation/
+hello.py
