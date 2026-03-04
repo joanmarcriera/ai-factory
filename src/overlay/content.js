@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Local Business Visibility Platform
 // @namespace https://www.google.com/maps/*
-// @version 1.7
+// @version 1.6
 // @description Overlay for Google Maps to extract business data
 // @match https://www.google.com/maps/*
 // @grant none

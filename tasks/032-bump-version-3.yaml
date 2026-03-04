@@ -1,12 +1,18 @@
-id: "032"
-title: "bump-version-3"
-type: "configuration"
-risk: "low"
-depends_on: ["031"]
+id: '032'
+title: bump-version-3
+type: configuration
+risk: low
+depends_on:
+- '031'
 context_files:
-  - "src/overlay/content.js"
+- src/overlay/content.js
 done_when:
-  - "Increment @version from 1.5 to 1.6 in the Tampermonkey block"
+- Increment @version from 1.5 to 1.6 in the Tampermonkey block
 validate:
-  - 'grep "@version 1.6" src/overlay/content.js'
-status: "pending"
+- grep "@version 1.6" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2800'
+  tokens_received: '682'
+  cost: 0.0016
+completed_at: '2026-03-04 23:33:43'
