@@ -1,15 +1,21 @@
-id: "006"
-title: "export-functionality"
-type: "integration"
-risk: "medium"
-depends_on: ["005"]
+id: '006'
+title: export-functionality
+type: integration
+risk: medium
+depends_on:
+- '005'
 context_files:
-  - "src/overlay/content.js"
+- src/overlay/content.js
 done_when:
-  - "Add an Export CSV button to the UI overlay"
-  - "Implement logic to convert collected leads to a .csv formatted string"
-  - "Trigger a browser download using a new Blob() object for the CSV file"
+- Add an Export CSV button to the UI overlay
+- Implement logic to convert collected leads to a .csv formatted string
+- Trigger a browser download using a new Blob() object for the CSV file
 validate:
-  - 'grep -i "csv" src/overlay/content.js'
-  - 'grep "Blob" src/overlay/content.js'
-status: "pending"
+- grep -i "csv" src/overlay/content.js
+- grep "Blob" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '1700'
+  tokens_received: '1000'
+  cost: 0.0017
+completed_at: '2026-03-04 22:41:41'

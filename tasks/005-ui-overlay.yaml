@@ -1,17 +1,24 @@
-id: "005"
-title: "ui-overlay"
-type: "frontend"
-risk: "medium"
-depends_on: ["004"]
+id: '005'
+title: ui-overlay
+type: frontend
+risk: medium
+depends_on:
+- '004'
 context_files:
-  - "src/overlay/content.js"
-  - "src/overlay/styles.css"
-  - "src/overlay/index.html"
+- src/overlay/content.js
+- src/overlay/styles.css
+- src/overlay/index.html
 done_when:
-  - "Inject the HTML fragment into the Google Maps page using document.body.appendChild"
-  - "Display extracted data in the floating UI panel"
-  - "Apply premium styling to the panel, explicitly including backdrop-filter: blur(10px) in styles.css"
+- Inject the HTML fragment into the Google Maps page using document.body.appendChild
+- Display extracted data in the floating UI panel
+- 'Apply premium styling to the panel, explicitly including backdrop-filter: blur(10px)
+  in styles.css'
 validate:
-  - 'grep "appendChild" src/overlay/content.js'
-  - 'grep "backdrop-filter" src/overlay/styles.css'
-status: "pending"
+- grep "appendChild" src/overlay/content.js
+- grep "backdrop-filter" src/overlay/styles.css
+status: done
+metrics:
+  tokens_sent: '1600'
+  tokens_received: '889'
+  cost: 0.0015
+completed_at: '2026-03-04 22:41:30'

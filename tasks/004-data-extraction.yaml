@@ -1,15 +1,22 @@
-id: "004"
-title: "data-extraction"
-type: "integration"
-risk: "high"
-depends_on: ["003"]
+id: '004'
+title: data-extraction
+type: integration
+risk: high
+depends_on:
+- '003'
 context_files:
-  - "src/overlay/content.js"
+- src/overlay/content.js
 done_when:
-  - "Create a function called extractData to collect Name, Phone, Website, and Rating from the active business listing element"
-  - "Store extracted data in a structured JavaScript object"
-  - "Handle cases where some information (like website) is missing"
+- Create a function called extractData to collect Name, Phone, Website, and Rating
+  from the active business listing element
+- Store extracted data in a structured JavaScript object
+- Handle cases where some information (like website) is missing
 validate:
-  - 'grep "extractData" src/overlay/content.js'
-  - 'grep "phone" src/overlay/content.js'
-status: "pending"
+- grep "extractData" src/overlay/content.js
+- grep "phone" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '1400'
+  tokens_received: '399'
+  cost: 0.00086
+completed_at: '2026-03-04 22:41:20'

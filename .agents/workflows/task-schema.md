@@ -35,6 +35,11 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - If your `validate` array checks for a specific string (e.g. `grep "extractData"`), your `done_when` array **MUST EXPLICITLY INSTRUCT** Aider to write that exact string (e.g., "Create a function exactly named 'extractData'").
 - Do not assume Aider will use the same variable/function names you are thinking of unless you enforce it in `done_when`.
 
+### 9. Task Immutability (CRITICAL)
+- **NEVER** alter the `id`, `depends_on`, or contents of a task that has `status: "done"`.
+- If a task has completed successfully (`done`), it is a proven historical record of what worked. Altering it (e.g. adding extra numbers or changing its prompt) destroys our understanding of which prompts actually succeeded.
+- If you need to re-run, modify, or iterate on a completed task, you must explicitly change its `status` back to `"pending"` before making any other changes to the file.
+
 ### Example
 ```yaml
 id: "999"
