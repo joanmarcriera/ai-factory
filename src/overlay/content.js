@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Local Business Visibility Platform
 // @namespace https://www.google.com/maps/*
-// @version 1.5
+// @version 1.6
 // @description Overlay for Google Maps to extract business data
 // @match https://www.google.com/maps/*
 // @grant none
@@ -200,7 +200,7 @@ setInterval(checkForBusinessElements, 1000);
 function applyVisualHighlights(businessElements, businessData) {
   businessElements.forEach((element, index) => {
     const data = businessData[index];
-    if (data.leadScore >= 4) {
+    if (data.leadScore >= 4 && !element.classList.contains('ai-processed')) {
       element.style.border = '2px solid #ff6b6b';
       const highValueText = document.createElement('span');
       highValueText.textContent = '🔥 High Value Lead';
@@ -208,6 +208,7 @@ function applyVisualHighlights(businessElements, businessData) {
       highValueText.style.fontWeight = 'bold';
       highValueText.style.marginLeft = '5px';
       element.appendChild(highValueText);
+      element.classList.add('ai-processed');
     }
   });
 }

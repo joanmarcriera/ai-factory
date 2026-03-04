@@ -1,0 +1,17 @@
+id: "031"
+title: "robust-scraping-v2"
+type: "bugfix"
+risk: "high"
+depends_on: ["030"]
+context_files:
+  - "src/overlay/content.js"
+done_when:
+  - "Update extractData to stop using [aria-label^=\"Name:\"] which is unreliable"
+  - "Extract the name from the parent element's aria-label (element.getAttribute('aria-label'))"
+  - "Extract the website by finding an <a> tag where the href contains a domain other than google.com or a known maps URL"
+  - "Extract the phone number by searching for a regex pattern in the element's textContent"
+  - "Update calculateLeadScore to return 0 if name is 'N/A' or missing"
+validate:
+  - 'grep "getAttribute(\x27aria-label\x27)" src/overlay/content.js'
+  - 'grep "website" src/overlay/content.js'
+status: "pending"

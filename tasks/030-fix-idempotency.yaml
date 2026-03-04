@@ -1,0 +1,22 @@
+id: '030'
+title: fix-idempotency
+type: bugfix
+risk: high
+depends_on:
+- 029
+context_files:
+- src/overlay/content.js
+done_when:
+- Modify applyVisualHighlights to check if the element has the class 'ai-processed'
+- If 'ai-processed' is present, DO NOT append another 'High Value Lead' span
+- Add the 'ai-processed' class to the element after appending the span
+- Ensure visual highlights (border and text) are only applied ONCE
+validate:
+- grep "ai-processed" src/overlay/content.js
+- grep "classList.add" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '4300'
+  tokens_received: '2200'
+  cost: 0.0038
+completed_at: '2026-03-04 23:33:25'

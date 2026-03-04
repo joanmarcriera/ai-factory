@@ -1,0 +1,12 @@
+id: "032"
+title: "bump-version-3"
+type: "configuration"
+risk: "low"
+depends_on: ["031"]
+context_files:
+  - "src/overlay/content.js"
+done_when:
+  - "Increment @version from 1.5 to 1.6 in the Tampermonkey block"
+validate:
+  - 'grep "@version 1.6" src/overlay/content.js'
+status: "pending"
