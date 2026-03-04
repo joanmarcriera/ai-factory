@@ -111,8 +111,8 @@ Generate necessary code changes.
 
     if result.returncode != 0:
         log(f"{task['id']} ✗ Aider execution failed (return code {result.returncode})")
-        log(f"STDOUT: {result.stdout}")
-        log(f"STDERR: {result.stderr}")
+        # log(f"STDOUT: {result.stdout}")
+        # log(f"STDERR: {result.stderr}")
         return
     else:
         log(f"{task['id']} Aider finished successfully (exit code 0)")

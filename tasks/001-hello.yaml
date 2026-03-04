@@ -5,12 +5,8 @@ risk: low
 depends_on: []
 context_files: []
 done_when:
-- Create a file named hello.py in the project root that prints "Hello from AI Factory"
+  - Create a file named hello.py in the src/ directory that prints "Hello from AI Factory"
 validate:
-- python3 hello.py | grep "Hello from AI Factory"
-status: done
-metrics:
-  tokens_sent: '3000'
-  tokens_received: '103'
-  cost: 0.0035
-completed_at: '2026-03-04 21:34:30'
+  - test -f src/hello.py
+  - python3 src/hello.py | grep -q "^Hello from AI Factory$"
+status: pending
