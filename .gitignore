@@ -6,4 +6,4 @@ __pycache__/
 .orchestrator/
 pending_implementation/
 .aider*
-hello.py
+# hello.py

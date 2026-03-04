@@ -1,6 +1,7 @@
 import yaml
 import subprocess
 import re
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -63,10 +64,9 @@ Complete when:
 Generate necessary code changes.
 """
     
-    # Execute with Aider
-    # We use 'uv run aider' to ensure it's running in the project context
+    # Execute with Aider via uv
     cmd = [
-        "aider",
+        "uv", "run", "aider",
         "--model", CONFIG["model"],
         "--message", prompt,
         "--yes",
@@ -77,14 +77,13 @@ Generate necessary code changes.
     
     log(f"Executing task {task['id']}: {task['title']}")
     
-    import os
-    env = os.environ.copy()
-    if "ANTHROPIC_API_KEY" not in env:
+    # Ensure API Key is available
+    if "ANTHROPIC_API_KEY" not in os.environ:
         log("CRITICAL ERROR: ANTHROPIC_API_KEY not found in environment!")
-        # Fallback for local testing or interactive use
-        # env["ANTHROPIC_API_KEY"] = input("Enter ANTHROPIC_API_KEY if available: ")
+        # We don't return here to allow aider to show its own error if it has one
+        # but the check helps the user.
 
-    result = subprocess.run(cmd, capture_output=True, text=True, env=env)
+    result = subprocess.run(cmd, capture_output=True, text=True, env=os.environ)
     
     # Extract token info if available
     metrics = {}
