@@ -44,6 +44,10 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - If the project results in a user-facing tool (like a browser extension, UI, or interactive script), the sequence of tasks **MUST** include a final task dedicated to generating human-readable instructions.
 - This ensures the user knows exactly how to test the final product manually.
 
+### 11. Outcome-Based Validation
+- Do not just validate internal logic (like checking if a function exists). You MUST validate the core requirement that makes the file usable in its target environment.
+- Example: If creating a Tampermonkey script, you must validate that the `==UserScript==` metadata block is present at the top of the file.
+
 ### Example
 ```yaml
 id: "999"

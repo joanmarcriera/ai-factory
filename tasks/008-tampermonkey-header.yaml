@@ -1,0 +1,21 @@
+id: 008
+title: tampermonkey-header
+type: configuration
+risk: low
+depends_on:
+- '007'
+context_files:
+- src/overlay/content.js
+done_when:
+- Add a valid ==UserScript== metadata block to the very beginning of src/overlay/content.js
+- Ensure the metadata block includes @name Local Business Visibility Platform
+- Ensure the metadata block includes @match https://www.google.com/maps/*
+validate:
+- head -n 20 src/overlay/content.js | grep "==UserScript=="
+- grep "@match" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '2200'
+  tokens_received: '1000'
+  cost: 0.0019
+completed_at: '2026-03-04 22:54:43'

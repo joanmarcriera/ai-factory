@@ -1,3 +1,12 @@
+// ==UserScript==
+// @name Local Business Visibility Platform
+// @namespace https://www.google.com/maps/*
+// @version 1.0
+// @description Overlay for Google Maps to extract business data
+// @match https://www.google.com/maps/*
+// @grant none
+// ==/UserScript==
+
 // This is a placeholder for the overlay content JavaScript
 console.log('Overlay content loaded');
 
