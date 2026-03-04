@@ -48,6 +48,11 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - Do not just validate internal logic (like checking if a function exists). You MUST validate the core requirement that makes the file usable in its target environment.
 - Example: If creating a Tampermonkey script, you must validate that the `==UserScript==` metadata block is present at the top of the file.
 
+### 12. Guardrails Field
+- By default, the orchestrator runs automatic guardrail checks (truncation detection, duplicate function detection, file shrinkage) on all `context_files` after Aider finishes.
+- For non-code tasks (documentation, config-only), add `guardrails: "skip"` to bypass these checks.
+- If omitted, guardrails default to running automatically.
+
 ### Example
 ```yaml
 id: "999"

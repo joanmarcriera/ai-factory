@@ -8,3 +8,4 @@ pending_implementation/
 .aider*
 # hello.py
 .env
+.claude/
