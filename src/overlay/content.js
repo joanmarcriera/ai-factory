@@ -5,6 +5,8 @@
 // @description Overlay for Google Maps to extract business data
 // @match https://www.google.com/maps/*
 // @grant none
+// @updateURL https://raw.githubusercontent.com/joanmarcriera/ai-factory/refs/heads/main/src/overlay/content.js
+// @downloadURL https://raw.githubusercontent.com/joanmarcriera/ai-factory/refs/heads/main/src/overlay/content.js
 // ==/UserScript==
 
 let overlayInjected = false;

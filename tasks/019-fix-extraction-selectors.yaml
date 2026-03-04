@@ -1,0 +1,26 @@
+id: 019
+title: fix-extraction-selectors
+type: bugfix
+risk: high
+depends_on:
+- 018
+context_files:
+- src/overlay/content.js
+done_when:
+- Re-write the extractData function to stop using specific aria-label matches like
+  aria-label^="Name:"
+- Extract the name by grabbing the element.getAttribute('aria-label') of the parent
+  [role="article"] itself
+- Extract the website by looking for an <a> tag where href starts with http and does
+  not contain google
+- Extract the phone number by grabbing the text of the entire element and using a
+  regex to find phone-like strings, or N/A
+validate:
+- grep "element.getAttribute(\x27aria-label\x27)" src/overlay/content.js
+- grep -v "aria-label^=\"Phone:\"" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '3900'
+  tokens_received: '439'
+  cost: 0.0015
+completed_at: '2026-03-04 23:15:54'

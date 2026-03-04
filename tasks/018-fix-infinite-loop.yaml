@@ -1,0 +1,24 @@
+id: 018
+title: fix-infinite-loop
+type: bugfix
+risk: medium
+depends_on:
+- '017'
+context_files:
+- src/overlay/content.js
+done_when:
+- Modify the applyVisualHighlights function
+- "Before appending the \U0001F525 High Value Lead text, check if the element already\
+  \ contains it"
+- Add a class ai-factory-highlighted to the element to mark it as processed, and skip
+  elements with this class
+- Modify addExportButton so that it does not repeatedly append 'Export CSV' buttons
+  on every interval
+validate:
+- grep "ai-factory-highlighted" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '3800'
+  tokens_received: '2100'
+  cost: 0.0036
+completed_at: '2026-03-04 23:15:48'

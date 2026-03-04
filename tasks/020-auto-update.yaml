@@ -1,0 +1,22 @@
+id: '020'
+title: auto-update
+type: configuration
+risk: low
+depends_on:
+- 019
+context_files:
+- src/overlay/content.js
+done_when:
+- Add @updateURL https://raw.githubusercontent.com/joanmarcriera/ai-factory/refs/heads/main/src/overlay/content.js
+  to the Tampermonkey metadata block
+- Add @downloadURL https://raw.githubusercontent.com/joanmarcriera/ai-factory/refs/heads/main/src/overlay/content.js
+  to the Tampermonkey metadata block
+validate:
+- grep "@updateURL.*joanmarcriera" src/overlay/content.js
+- grep "@downloadURL.*joanmarcriera" src/overlay/content.js
+status: done
+metrics:
+  tokens_sent: '4200'
+  tokens_received: '1900'
+  cost: 0.0035
+completed_at: '2026-03-04 23:17:29'
