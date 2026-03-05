@@ -1,25 +1,33 @@
-id: "001"
-title: "sites-config-schema"
-type: "scaffold"
-risk: "low"
+id: '001'
+title: sites-config-schema
+type: scaffold
+risk: low
 depends_on: []
 context_files:
-  - "config/sites.yaml"
-  - "config/schema.yaml"
+- config/sites.yaml
+- config/schema.yaml
 done_when:
-  - "Create config/sites.yaml with a sample configuration for 3 example websites"
-  - "Each site entry must have fields: name, url, check_interval_seconds, ssl_check (boolean), speed_check (boolean), alert_email"
-  - "The first site must be name 'Example Corp' with url 'https://example.com'"
-  - "The second site must be name 'Test Shop' with url 'https://test-shop.example.org'"
-  - "The third site must be name 'Local Bakery' with url 'https://localbakery.co.uk'"
-  - "Create config/schema.yaml documenting the expected structure of sites.yaml with field names, types, and descriptions"
+- Create config/sites.yaml with a sample configuration for 3 example websites
+- 'Each site entry must have fields: name, url, check_interval_seconds, ssl_check
+  (boolean), speed_check (boolean), alert_email'
+- The first site must be name 'Example Corp' with url 'https://example.com'
+- The second site must be name 'Test Shop' with url 'https://test-shop.example.org'
+- The third site must be name 'Local Bakery' with url 'https://localbakery.co.uk'
+- Create config/schema.yaml documenting the expected structure of sites.yaml with
+  field names, types, and descriptions
 validate:
-  - "python3 -c \"import yaml; d=yaml.safe_load(open('config/sites.yaml')); assert len(d['sites']) == 3\""
-  - "grep 'example.com' config/sites.yaml"
-  - "grep 'test-shop.example.org' config/sites.yaml"
-  - "grep 'localbakery.co.uk' config/sites.yaml"
-  - "grep 'check_interval_seconds' config/sites.yaml"
-  - "grep 'ssl_check' config/sites.yaml"
-  - "grep 'alert_email' config/sites.yaml"
-  - "python3 -c \"import yaml; yaml.safe_load(open('config/schema.yaml'))\""
-status: "pending"
+- python3 -c "import yaml; d=yaml.safe_load(open('config/sites.yaml')); assert len(d['sites'])
+  == 3"
+- grep 'example.com' config/sites.yaml
+- grep 'test-shop.example.org' config/sites.yaml
+- grep 'localbakery.co.uk' config/sites.yaml
+- grep 'check_interval_seconds' config/sites.yaml
+- grep 'ssl_check' config/sites.yaml
+- grep 'alert_email' config/sites.yaml
+- python3 -c "import yaml; yaml.safe_load(open('config/schema.yaml'))"
+status: done
+metrics:
+  tokens_sent: '4600'
+  tokens_received: '340'
+  cost: 0.00026
+completed_at: '2026-03-05 00:22:08'

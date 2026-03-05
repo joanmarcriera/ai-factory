@@ -1,0 +1,25 @@
+type: object
+properties:
+  sites:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the website
+        url:
+          type: string
+          description: URL of the website
+        check_interval_seconds:
+          type: integer
+          description: Interval in seconds to check the website
+        ssl_check:
+          type: boolean
+          description: Check for SSL certificate expiration
+        speed_check:
+          type: boolean
+          description: Check for page speed
+        alert_email:
+          type: string
+          description: Email address to send alerts to

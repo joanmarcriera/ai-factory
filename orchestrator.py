@@ -15,7 +15,7 @@ def load_env():
             if line and not line.startswith("#") and "=" in line:
                 key, value = line.split("=", 1)
                 value = value.strip().strip('"').strip("'")
-                os.environ[key.strip()] = value
+                os.environ.setdefault(key.strip(), value)
 
 load_env()
 
@@ -168,12 +168,14 @@ def run_aider(task, context_files, prompt):
     aider_model = CONFIG["model"]
 
     cmd = [
-        "uv", "run", "aider",
+        "aider",
         "--model", aider_model,
         "--message", prompt,
         "--yes",
         "--no-git-commit",
         "--no-auto-commits",
+        "--disable-playwright",
+        "--no-detect-urls",
         *context_files
     ]
 
@@ -183,8 +185,9 @@ def run_aider(task, context_files, prompt):
             log(f"Creating directory {cf_path.parent}", level=1)
             cf_path.parent.mkdir(parents=True, exist_ok=True)
 
-    if "ANTHROPIC_API_KEY" not in os.environ:
-        log("CRITICAL ERROR: ANTHROPIC_API_KEY not found in environment!", level=0)
+    api_key_vars = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GROQ_API_KEY", "OPENROUTER_API_KEY"]
+    if not any(os.environ.get(k) for k in api_key_vars):
+        log("CRITICAL ERROR: No API key found! Set one of: " + ", ".join(api_key_vars), level=0)
 
     return subprocess.run(cmd, capture_output=True, text=True, env=os.environ)
 

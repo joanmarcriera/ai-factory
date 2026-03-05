@@ -1,0 +1,21 @@
+sites:
+  - name: Example Corp
+    url: https://example.com
+    check_interval_seconds: 300
+    ssl_check: true
+    speed_check: true
+    alert_email: examplecorp@example.com
+
+  - name: Test Shop
+    url: https://test-shop.example.org
+    check_interval_seconds: 300
+    ssl_check: true
+    speed_check: true
+    alert_email: testshop@example.org
+
+  - name: Local Bakery
+    url: https://localbakery.co.uk
+    check_interval_seconds: 300
+    ssl_check: true
+    speed_check: true
+    alert_email: localbakery@localbakery.co.uk
