@@ -3,22 +3,59 @@ description: Project Coding Conventions and Guidelines
 ---
 
 # OVERALL GOAL
-We are building a Tampermonkey overlay for Google Maps for lead generation.
+We are building a "Website Monitoring & Maintenance" toolkit — a set of scripts and configurations that:
+1. Monitor website uptime, SSL expiry, and page speed for multiple client sites
+2. Generate automated monthly health reports
+3. Alert on issues via email/webhook
+4. Run as a self-hosted solution using Docker (Uptime Kuma) and Python scripts
 
-# JAVASCRIPT CONVENTIONS
-- Write clean, modern ES6+ Javascript.
-- When querying for URLs, be robust (e.g., check for `window.location.hostname` and `pathname` instead of hardcoding full exact URL strings).
-- ALWAYS fulfill the EXACT instructions in the task description. If a task says to write a specific string or comment, do it exactly as asked to ensure validation passes.
-- **NO PLACEHOLDERS & NO REGRESSIONS**: Never use comments like `// Rest of code...` or truncate files. You must always maintain the complete file contents. When adding a new feature, DO NOT overwrite or revert previous features (such as extraction logic or existing functions) to an older state.
-- **NO DUPLICATE FUNCTIONS**: Never create two functions with the same name in the same file. Always consolidate logic into a single function definition.
-- **Indentation**: Use 2 spaces for indentation in all JavaScript files. This is the standard community convention. Do not use hard tabs.
-- **Tampermonkey Scripts**: Any script intended for Tampermonkey MUST include a valid `==UserScript==` metadata block at the very top of the file, including `@name`, `@namespace`, `@version`, `@description`, `@match`, and `@grant`. It MUST also include `@updateURL` and `@downloadURL` pointing to the raw source file in the repository to enable auto-updating.
-- **Auto-Versioning**: Every time you modify a Tampermonkey script in a new task, you MUST increment the `@version` number in the metadata block (e.g., from `1.0` to `1.1`).
-- **Self-Contained UI**: Tampermonkey scripts consist of an isolated Javascript file. Do not assume `index.html` or `styles.css` exist in the browser context. All UI overlays MUST be dynamically injected via `document.createElement`, `innerHTML`, and `<style>` tag appending. They MUST always include `z-index: 999999 !important;` to prevent being buried under Google Maps UI.
-- **Lead Qualification**: When evaluating DOM elements for business information, strongly favor identifying missing attributes (e.g. `phone: null` or `claimed: false`). This missing information is precisely what defines a high-value lead for monetization.
-- **Idempotent DOM Modifications**: Because scripts often rely on `setInterval` or `MutationObserver`, any manipulation of the page DOM (like appending a new button or a highlight label) **MUST** check if the modification has already been applied. Usually, this means adding a class like `.ai-injected` to the parent and skipping elements that already have it.
-- **Robust Scraping Tactics**: Google Maps obfuscates classes and `aria-label` text is highly localized and unreliable. Extract data by structural heuristics (e.g., getting the element's innerText, or looking for specific tag hierarchies like `a[href^="http"]` for websites, or regexing for phone numbers in the full text payload).
+# PYTHON CONVENTIONS
+- Use Python 3.12+ with type hints on all function signatures.
+- Use `pathlib.Path` instead of `os.path`.
+- Use f-strings for string formatting.
+- Follow PEP 8 with 4-space indentation.
+- Use `yaml.safe_load` / `yaml.safe_dump` for YAML handling.
+- Use `argparse` for CLI tools.
+- Use `requests` for HTTP calls. Do NOT use `urllib`.
+- All scripts must be executable via `uv run python <script>`.
+- **NO PLACEHOLDERS & NO REGRESSIONS**: Never use comments like `# Rest of code...` or truncate files. You must always maintain the complete file contents.
+- **NO DUPLICATE FUNCTIONS**: Never create two functions with the same name in the same file.
 
-# HTML/CSS CONVENTIONS
-- Use basic, minimal HTML tags.
-- For CSS, utilize basic class names. If "glassmorphism" is requested, use `backdrop-filter: blur(10px)` and semi-transparent backgrounds.
+# SHELL SCRIPT CONVENTIONS
+- Use `#!/usr/bin/env bash` shebang.
+- Use `set -euo pipefail` at the top.
+- Quote all variables: `"${var}"`.
+
+# DOCKER / DOCKER COMPOSE CONVENTIONS
+- Use `docker-compose.yml` (v3.8+ syntax).
+- Pin image versions (no `latest` tags).
+- Use named volumes for persistent data.
+- Expose only necessary ports.
+
+# CONFIGURATION CONVENTIONS
+- All client/site configuration goes in `config/sites.yaml`.
+- Secrets (API keys, SMTP credentials) go in `.env` and are NEVER committed.
+- Config schema is defined in `config/schema.yaml`.
+
+# FILE STRUCTURE
+```
+src/
+  monitor/        # Core monitoring scripts
+  reports/        # Report generation
+  alerts/         # Alert/notification logic
+config/
+  sites.yaml      # Site configurations
+  schema.yaml     # Config validation schema
+docker/
+  docker-compose.yml
+scripts/
+  setup.sh        # Initial setup script
+tests/
+  test_monitor.py
+  test_reports.py
+```
+
+# VALIDATION RULES
+- Every Python file must pass `python -m py_compile <file>`.
+- Config files must be valid YAML (`python -c "import yaml; yaml.safe_load(open('<file>'))"` must succeed).
+- Docker compose must pass `docker compose config -q` (or equivalent dry-run).
