@@ -2,6 +2,7 @@ import ssl
 import socket
 from datetime import datetime, timedelta
 from typing import Dict
+from urllib.parse import urlparse
 
 def check_ssl(hostname: str, port: int = 443) -> Dict:
     try:
@@ -19,9 +20,19 @@ def check_ssl(hostname: str, port: int = 443) -> Dict:
     except ssl.SSLError as e:
         is_valid = False
         error = str(e)
+        issuer = None
+        subject = None
+        not_before = None
+        not_after = None
+        days_until_expiry = None
     except socket.error as e:
         is_valid = False
         error = str(e)
+        issuer = None
+        subject = None
+        not_before = None
+        not_after = None
+        days_until_expiry = None
     return {
         'hostname': hostname,
         'issuer': issuer,
@@ -37,7 +48,10 @@ def check_ssl_for_sites(sites: list) -> list:
     results = []
     for site in sites:
         if site['ssl_check']:
-            results.append(check_ssl(site['url']))
+            hostname = urlparse(site['url']).hostname
+            if hostname is None:
+                hostname = site['url']  # fallback to full URL if parsing fails
+            results.append(check_ssl(hostname))
     return results
 
 if __name__ == '__main__':

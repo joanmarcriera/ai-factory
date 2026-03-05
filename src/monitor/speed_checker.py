@@ -1,5 +1,6 @@
 import requests
 from typing import Dict
+from datetime import datetime
 
 def check_speed(url: str) -> Dict:
     try:
@@ -10,7 +11,7 @@ def check_speed(url: str) -> Dict:
         total_time_ms = response.elapsed.total_seconds() * 1000
         content_size_bytes = len(response.content)
         status_code = response.status_code
-        checked_at = response.elapsed.total_seconds()
+        checked_at = datetime.now().isoformat()
         error = None
     except requests.RequestException as e:
         dns_time_ms = None

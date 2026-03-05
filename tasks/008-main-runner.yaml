@@ -1,36 +1,40 @@
-id: "008"
-title: "main-runner"
-type: "feature"
-risk: "medium"
+id: 008
+title: main-runner
+type: feature
+risk: medium
 depends_on:
-  - "006"
-  - "007"
+- '006'
+- '007'
 context_files:
-  - "src/monitor/runner.py"
-  - "src/monitor/config_loader.py"
-  - "src/monitor/uptime_checker.py"
-  - "src/monitor/ssl_checker.py"
-  - "src/monitor/speed_checker.py"
-  - "src/alerts/alert_engine.py"
-  - "src/reports/report_generator.py"
+- src/monitor/runner.py
+- src/monitor/config_loader.py
+- src/monitor/uptime_checker.py
+- src/monitor/ssl_checker.py
+- src/monitor/speed_checker.py
+- src/alerts/alert_engine.py
+- src/reports/report_generator.py
 done_when:
-  - "Create src/monitor/runner.py"
-  - "Import config_loader, uptime_checker, ssl_checker, speed_checker from src.monitor"
-  - "Import alert_engine from src.alerts"
-  - "Import report_generator from src.reports"
-  - "Define a function exactly named 'run_checks' that takes a config_path string (default 'config/sites.yaml')"
-  - "run_checks must: load sites, run uptime checks, run SSL checks, run speed checks, evaluate alerts, generate a report, and save the report"
-  - "run_checks must print a summary line: 'Checked N sites: X up, Y down, Z alerts'"
-  - "run_checks must return a dictionary with keys: uptime_results, ssl_results, speed_results, alerts, report"
-  - "Use argparse to accept --config and --output-dir arguments"
-  - "Add a if __name__ == '__main__' block that parses args and calls run_checks"
+- Create src/monitor/runner.py
+- Import config_loader, uptime_checker, ssl_checker, speed_checker from src.monitor
+- Import alert_engine from src.alerts
+- Import report_generator from src.reports
+- Define a function exactly named 'run_checks' that takes a config_path string (default
+  'config/sites.yaml')
+- 'run_checks must: load sites, run uptime checks, run SSL checks, run speed checks,
+  evaluate alerts, generate a report, and save the report'
+- 'run_checks must print a summary line: ''Checked N sites: X up, Y down, Z alerts'''
+- 'run_checks must return a dictionary with keys: uptime_results, ssl_results, speed_results,
+  alerts, report'
+- Use argparse to accept --config and --output-dir arguments
+- Add a if __name__ == '__main__' block that parses args and calls run_checks
 validate:
-  - "python3 -m py_compile src/monitor/runner.py"
-  - "grep 'def run_checks' src/monitor/runner.py"
-  - "grep 'argparse' src/monitor/runner.py"
-  - "grep 'uptime_checker' src/monitor/runner.py"
-  - "grep 'ssl_checker' src/monitor/runner.py"
-  - "grep 'speed_checker' src/monitor/runner.py"
-  - "grep 'alert_engine' src/monitor/runner.py"
-  - "grep 'report_generator' src/monitor/runner.py"
-status: "pending"
+- python3 -m py_compile src/monitor/runner.py
+- grep 'def run_checks' src/monitor/runner.py
+- grep 'argparse' src/monitor/runner.py
+- grep 'uptime_checker' src/monitor/runner.py
+- grep 'ssl_checker' src/monitor/runner.py
+- grep 'speed_checker' src/monitor/runner.py
+- grep 'alert_engine' src/monitor/runner.py
+- grep 'report_generator' src/monitor/runner.py
+status: done
+completed_at: '2026-03-05 07:19:43'

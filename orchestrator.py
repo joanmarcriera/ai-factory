@@ -293,14 +293,15 @@ def execute_task(task_file, task):
             retry_errors = [f"Aider exited with code {result.returncode}"]
             continue
 
-        # Check false success — also check for rate limit in false success cases
+        # Check false success — try next model in chain before giving up
         if check_false_success(result):
-            if check_rate_limited(result) and current_model_idx + 1 < len(all_models):
+            if current_model_idx + 1 < len(all_models):
                 next_model = all_models[current_model_idx + 1]
-                log(f"{task['id']} ⚠ Rate limited (false success). Falling back to {next_model}", level=0)
+                log(f"{task['id']} ⚠ API error on {current_model}. Falling back to {next_model}", level=0)
                 current_model_idx += 1
+                attempt -= 1  # Don't count model switching as an attempt
                 continue
-            log(f"{task['id']} ✗ Aider reported success but LiteLLM/API failed.", level=0)
+            log(f"{task['id']} ✗ API failed on all models.", level=0)
             log(f"--- AIDER STDOUT ---\n{result.stdout}", level=0)
             return False
 
