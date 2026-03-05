@@ -1,0 +1,8 @@
+src/
+  monitor/
+    runner.py
+  reports/
+  alerts/
+  config/
+    schema.yaml
+  tests/

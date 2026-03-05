@@ -1,26 +1,35 @@
-id: "011"
-title: "setup-script"
-type: "infrastructure"
-risk: "low"
+id: '011'
+title: setup-script
+type: infrastructure
+risk: low
 depends_on:
-  - "009"
-  - "010"
+- 009
+- '010'
 context_files:
-  - "scripts/setup.sh"
+- scripts/setup.sh
 done_when:
-  - "Create scripts/setup.sh"
-  - "Add shebang line #!/usr/bin/env bash"
-  - "Add set -euo pipefail on the second line"
-  - "The script must create required directories: config, reports_output, docker"
-  - "The script must check if config/sites.yaml exists, and if not, copy it from a template or print a warning"
-  - "The script must check if .env exists, and if not, create a sample .env with placeholder values for SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, WEBHOOK_URL"
-  - "The script must check if docker and docker compose are available and print their versions"
-  - "The script must print 'Setup complete. Edit config/sites.yaml and .env before running.' at the end"
+- Create scripts/setup.sh
+- 'Add shebang line #!/usr/bin/env bash'
+- Add set -euo pipefail on the second line
+- 'The script must create required directories: config, reports_output, docker'
+- The script must check if config/sites.yaml exists, and if not, copy it from a template
+  or print a warning
+- The script must check if .env exists, and if not, create a sample .env with placeholder
+  values for SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, WEBHOOK_URL
+- The script must check if docker and docker compose are available and print their
+  versions
+- The script must print 'Setup complete. Edit config/sites.yaml and .env before running.'
+  at the end
 validate:
-  - "grep '#!/usr/bin/env bash' scripts/setup.sh"
-  - "grep 'set -euo pipefail' scripts/setup.sh"
-  - "grep 'sites.yaml' scripts/setup.sh"
-  - "grep 'SMTP_HOST' scripts/setup.sh"
-  - "grep 'WEBHOOK_URL' scripts/setup.sh"
-  - "grep 'Setup complete' scripts/setup.sh"
-status: "pending"
+- grep '#!/usr/bin/env bash' scripts/setup.sh
+- grep 'set -euo pipefail' scripts/setup.sh
+- grep 'sites.yaml' scripts/setup.sh
+- grep 'SMTP_HOST' scripts/setup.sh
+- grep 'WEBHOOK_URL' scripts/setup.sh
+- grep 'Setup complete' scripts/setup.sh
+status: done
+metrics:
+  tokens_sent: '4800'
+  tokens_received: '508'
+  cost: 0.00028
+completed_at: '2026-03-05 07:37:56'
