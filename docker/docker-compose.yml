@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    restart: unless-stopped
+
+  monitor:
+    build: .
+    volumes:
+      - ./config:/app/config:ro
+      - reports-data:/app/reports_output
+    depends_on:
+      - uptime-kuma
+
+volumes:
+  uptime-kuma-data:
+  reports-data:
