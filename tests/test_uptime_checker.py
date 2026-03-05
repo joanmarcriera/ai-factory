@@ -22,7 +22,7 @@ def test_check_uptime_returns_dict():
         mock_get.return_value.elapsed.total_seconds.return_value = 0.5
         result = check_uptime('https://example.com')
         assert isinstance(result, dict)
-        assert 'site_name' not in result
+        assert 'site_name' in result
         assert 'url' in result
         assert 'is_up' in result
         assert 'status_code' in result
