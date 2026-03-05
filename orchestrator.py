@@ -3,6 +3,7 @@ import subprocess
 import re
 import os
 import argparse
+import time
 from pathlib import Path
 from datetime import datetime
 
@@ -236,6 +237,13 @@ def run_task_validations(task, aider_result):
             log(f"PASSED: {cmd_str}", level=1)
     return (len(errors) == 0, errors)
 
+def extract_provider(model_name: str) -> str:
+    """Extract provider from model string (e.g., 'groq/llama-3.1-8b-instant' -> 'groq')."""
+    if "/" in model_name:
+        return model_name.split("/")[0]
+    return "unknown"
+
+
 def execute_task(task_file, task):
     """Execute task with retry logic and guardrails."""
     context_files = task.get("context_files", [])
@@ -249,9 +257,19 @@ def execute_task(task_file, task):
     all_models = [CONFIG["model"]] + CONFIG.get("fallback_models", [])
     current_model_idx = 0
 
+    # Metrics tracking
+    start_time = time.time()
+    models_tried = []       # ordered list of models attempted
+    last_token_metrics = {}  # tokens/cost from aider output
+
     while attempt < max_retries:
         attempt += 1
         current_model = all_models[current_model_idx]
+
+        # Track models tried (avoid duplicates from retries on same model)
+        if not models_tried or models_tried[-1] != current_model:
+            models_tried.append(current_model)
+
         attempt_label = f"(attempt {attempt}/{max_retries})" if max_retries > 1 else ""
         model_label = f" [{current_model}]"
         log(f"Executing task {task['id']}: {task['title']} {attempt_label}{model_label}", level=0)
@@ -266,11 +284,11 @@ def execute_task(task_file, task):
         model_override = current_model if current_model_idx > 0 else None
         result = run_aider(task, context_files, prompt, model_override=model_override)
 
-        # Extract metrics
-        metrics = extract_metrics(result.stdout)
-        if metrics:
-            log(f"Metrics: Sent={metrics['tokens_sent']}, Received={metrics['tokens_received']}, Cost=${metrics['cost']:.4f}", level=1)
-            task["metrics"] = metrics
+        # Extract token metrics from aider output
+        token_metrics = extract_metrics(result.stdout)
+        if token_metrics:
+            last_token_metrics = token_metrics
+            log(f"Metrics: Sent={token_metrics['tokens_sent']}, Received={token_metrics['tokens_received']}, Cost=${token_metrics['cost']:.4f}", level=1)
 
         # Check rate limiting — advance to next model in chain
         if check_rate_limited(result):
@@ -329,11 +347,25 @@ def execute_task(task_file, task):
             retry_errors = all_errors
             continue
 
-        # All checks passed
+        # All checks passed — write standardized metrics
+        duration = round(time.time() - start_time)
+        fallbacks_used = len(models_tried) - 1
+
         task["status"] = "done"
-        task["completed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        task["metrics"] = {
+            "model": current_model,
+            "provider": extract_provider(current_model),
+            "attempts": attempt,
+            "fallbacks_used": fallbacks_used,
+            "fallback_chain": models_tried,
+            "tokens_sent": int(last_token_metrics.get("tokens_sent", 0)),
+            "tokens_received": int(last_token_metrics.get("tokens_received", 0)),
+            "cost": float(last_token_metrics.get("cost", 0.0)),
+            "duration_seconds": duration,
+            "completed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
         task_file.write_text(yaml.dump(task, sort_keys=False))
-        log(f"{task['id']} ✓ All validations passed.", level=0)
+        log(f"{task['id']} ✓ All validations passed. [{current_model}, {duration}s, {attempt} attempt(s), {fallbacks_used} fallback(s)]", level=0)
 
         commit_msg = f"chore(task): Complete task {task['id']} - {task['title']}"
         subprocess.run(["git", "add", "."], check=False)
