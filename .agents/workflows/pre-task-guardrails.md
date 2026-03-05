@@ -40,6 +40,16 @@ if post_lines < pre_lines * 0.8:
 ```
 **Why**: Ensures Aider actually wrote the implementation, not just stubs.
 
+### 6. No Junk Files from Shell Commands
+After Aider runs, check for newly created files whose names look like shell commands (contain spaces or start with common CLI tools). Examples of junk files Aider has created:
+- `docker-compose down`
+- `pip install -r requirements.txt`
+- `pytest tests`
+
+**Why**: When `done_when` contains backtick-wrapped shell commands, Aider sometimes creates literal files with those names instead of embedding them in code or docs.
+
+**Prevention**: In `done_when`, use descriptive text ("Include a docker compose up command") not backtick commands ("Include \`docker-compose up -d\`").
+
 ## How the Orchestrator Uses These
 
 1. Before calling Aider: snapshot line counts of all `context_files`
