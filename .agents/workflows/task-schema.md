@@ -53,6 +53,11 @@ AI Agents and human contributors MUST follow these rules when creating or modify
 - For non-code tasks (documentation, config-only), add `guardrails: "skip"` to bypass these checks.
 - If omitted, guardrails default to running automatically.
 
+### 13. Metrics (Auto-Generated)
+- The `metrics` block is written automatically by the orchestrator on task completion.
+- See `.agents/workflows/task-metrics.md` for the full schema.
+- **Never** manually set partial metrics. If completing a task manually, use `model: "manual"` and `provider: "human"`.
+
 ### Example
 ```yaml
 id: "999"
@@ -70,4 +75,5 @@ validate:
   - "grep \"print\" src/example.py"
   - "uv run python src/example.py | grep -q \"Success\""
 status: "pending"
+# metrics: (auto-written by orchestrator on completion — see task-metrics.md)
 ```
