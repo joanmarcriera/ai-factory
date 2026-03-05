@@ -1,0 +1,24 @@
+id: "013"
+title: "test-alert-engine"
+type: "test"
+risk: "low"
+depends_on:
+  - "006"
+context_files:
+  - "tests/test_alert_engine.py"
+  - "src/alerts/alert_engine.py"
+done_when:
+  - "Create tests/test_alert_engine.py"
+  - "Import pytest"
+  - "Import evaluate_alerts and format_alert_text from src.alerts.alert_engine"
+  - "Write a test function exactly named 'test_site_down_generates_critical_alert' that passes uptime results with is_up=False and verifies a critical site_down alert is generated"
+  - "Write a test function exactly named 'test_ssl_expiring_generates_warning' that passes ssl results with days_until_expiry=7 and verifies a warning ssl_expiring alert is generated"
+  - "Write a test function exactly named 'test_no_alerts_when_healthy' that passes healthy uptime and ssl results and verifies no alerts are generated"
+  - "Write a test function exactly named 'test_format_alert_text_returns_string' that verifies format_alert_text returns a non-empty string"
+validate:
+  - "python3 -m py_compile tests/test_alert_engine.py"
+  - "grep 'def test_site_down_generates_critical_alert' tests/test_alert_engine.py"
+  - "grep 'def test_ssl_expiring_generates_warning' tests/test_alert_engine.py"
+  - "grep 'def test_no_alerts_when_healthy' tests/test_alert_engine.py"
+  - "grep 'def test_format_alert_text_returns_string' tests/test_alert_engine.py"
+status: "pending"

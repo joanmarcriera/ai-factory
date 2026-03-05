@@ -1,0 +1,28 @@
+id: "009"
+title: "docker-compose-setup"
+type: "infrastructure"
+risk: "low"
+depends_on:
+  - "001"
+context_files:
+  - "docker/docker-compose.yml"
+done_when:
+  - "Create docker/docker-compose.yml using version 3.8 syntax"
+  - "Define a service named 'uptime-kuma' using image louislam/uptime-kuma:1"
+  - "Map port 3001:3001 for the uptime-kuma service"
+  - "Use a named volume called 'uptime-kuma-data' mounted at /app/data"
+  - "Set restart policy to 'unless-stopped' for uptime-kuma"
+  - "Define a service named 'monitor' that builds from the project root with a Dockerfile at docker/Dockerfile"
+  - "The monitor service must mount the config directory as /app/config read-only"
+  - "The monitor service must mount a named volume called 'reports-data' at /app/reports_output"
+  - "The monitor service must depend_on uptime-kuma"
+  - "Define the named volumes uptime-kuma-data and reports-data at the bottom of the file"
+validate:
+  - "python3 -c \"import yaml; d=yaml.safe_load(open('docker/docker-compose.yml')); assert 'uptime-kuma' in d['services']\""
+  - "grep 'louislam/uptime-kuma:1' docker/docker-compose.yml"
+  - "grep '3001:3001' docker/docker-compose.yml"
+  - "grep 'uptime-kuma-data' docker/docker-compose.yml"
+  - "grep 'reports-data' docker/docker-compose.yml"
+  - "grep 'unless-stopped' docker/docker-compose.yml"
+  - "grep 'monitor' docker/docker-compose.yml"
+status: "pending"

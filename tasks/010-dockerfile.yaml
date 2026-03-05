@@ -1,0 +1,25 @@
+id: "010"
+title: "dockerfile"
+type: "infrastructure"
+risk: "low"
+depends_on:
+  - "008"
+context_files:
+  - "docker/Dockerfile"
+done_when:
+  - "Create docker/Dockerfile"
+  - "Use python:3.12-slim as the base image"
+  - "Set WORKDIR to /app"
+  - "Copy pyproject.toml first for dependency caching"
+  - "Install pip dependencies using pip install with no cache"
+  - "Copy the src directory and config directory into the container"
+  - "Set the default CMD to python src/monitor/runner.py"
+  - "Add a LABEL maintainer with value 'ai-factory'"
+validate:
+  - "grep 'python:3.12-slim' docker/Dockerfile"
+  - "grep 'WORKDIR /app' docker/Dockerfile"
+  - "grep 'pyproject.toml' docker/Dockerfile"
+  - "grep 'CMD' docker/Dockerfile"
+  - "grep 'runner.py' docker/Dockerfile"
+  - "grep 'LABEL' docker/Dockerfile"
+status: "pending"

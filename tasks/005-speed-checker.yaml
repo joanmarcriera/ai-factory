@@ -1,0 +1,28 @@
+id: "005"
+title: "speed-checker"
+type: "feature"
+risk: "medium"
+depends_on:
+  - "002"
+context_files:
+  - "src/monitor/speed_checker.py"
+done_when:
+  - "Create src/monitor/speed_checker.py"
+  - "Import requests library"
+  - "Define a function exactly named 'check_speed' that takes a url string"
+  - "The function must make a GET request and measure: dns_time_ms, connect_time_ms, ttfb_ms (time to first byte), total_time_ms, content_size_bytes"
+  - "Use requests elapsed attribute for total_time_ms"
+  - "content_size_bytes must be len(response.content)"
+  - "Return a dictionary with keys: url, total_time_ms, content_size_bytes, status_code, checked_at, error"
+  - "All time values must be floats rounded to 2 decimal places"
+  - "If the request fails, error must contain the error message"
+  - "Define a function exactly named 'check_speed_for_sites' that takes a list of site dictionaries, checks speed for sites where speed_check is True, and returns a list of result dictionaries"
+  - "Add a if __name__ == '__main__' block that loads sites from config and checks speed, printing results as JSON"
+validate:
+  - "python3 -m py_compile src/monitor/speed_checker.py"
+  - "grep 'def check_speed' src/monitor/speed_checker.py"
+  - "grep 'def check_speed_for_sites' src/monitor/speed_checker.py"
+  - "grep 'total_time_ms' src/monitor/speed_checker.py"
+  - "grep 'content_size_bytes' src/monitor/speed_checker.py"
+  - "grep 'import requests' src/monitor/speed_checker.py"
+status: "pending"

@@ -1,0 +1,24 @@
+id: "002"
+title: "config-loader"
+type: "feature"
+risk: "low"
+depends_on:
+  - "001"
+context_files:
+  - "src/monitor/config_loader.py"
+  - "config/sites.yaml"
+done_when:
+  - "Create src/monitor/config_loader.py"
+  - "Define a function exactly named 'load_sites' that takes a file_path parameter with default value 'config/sites.yaml'"
+  - "The function must read the YAML file using yaml.safe_load and return a list of site dictionaries"
+  - "Define a function exactly named 'validate_site' that takes a site dictionary and returns True if it has all required keys: name, url, check_interval_seconds, ssl_check, speed_check, alert_email"
+  - "Define a function exactly named 'load_and_validate' that calls load_sites then validates each site, raising ValueError for invalid sites"
+  - "Add a if __name__ == '__main__' block that loads and prints the number of valid sites"
+validate:
+  - "python3 -m py_compile src/monitor/config_loader.py"
+  - "grep 'def load_sites' src/monitor/config_loader.py"
+  - "grep 'def validate_site' src/monitor/config_loader.py"
+  - "grep 'def load_and_validate' src/monitor/config_loader.py"
+  - "grep 'yaml.safe_load' src/monitor/config_loader.py"
+  - "python3 src/monitor/config_loader.py"
+status: "pending"

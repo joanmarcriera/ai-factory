@@ -1,0 +1,26 @@
+id: "012"
+title: "test-config-loader"
+type: "test"
+risk: "low"
+depends_on:
+  - "002"
+context_files:
+  - "tests/test_config_loader.py"
+  - "src/monitor/config_loader.py"
+done_when:
+  - "Create tests/test_config_loader.py"
+  - "Import pytest"
+  - "Import load_sites, validate_site, load_and_validate from src.monitor.config_loader"
+  - "Write a test function exactly named 'test_load_sites_returns_list' that verifies load_sites returns a list"
+  - "Write a test function exactly named 'test_validate_site_valid' that verifies validate_site returns True for a dictionary with all required keys"
+  - "Write a test function exactly named 'test_validate_site_missing_key' that verifies validate_site returns False when a required key is missing"
+  - "Write a test function exactly named 'test_load_sites_file_not_found' that verifies load_sites raises FileNotFoundError for a nonexistent path"
+  - "Each test must use assert statements"
+validate:
+  - "python3 -m py_compile tests/test_config_loader.py"
+  - "grep 'def test_load_sites_returns_list' tests/test_config_loader.py"
+  - "grep 'def test_validate_site_valid' tests/test_config_loader.py"
+  - "grep 'def test_validate_site_missing_key' tests/test_config_loader.py"
+  - "grep 'def test_load_sites_file_not_found' tests/test_config_loader.py"
+  - "grep 'import pytest' tests/test_config_loader.py"
+status: "pending"
