@@ -1,25 +1,33 @@
-id: "014"
-title: "python-init-files"
-type: "scaffold"
-risk: "low"
+id: '014'
+title: python-init-files
+type: scaffold
+risk: low
 depends_on:
-  - "001"
+- '001'
 context_files:
-  - "src/__init__.py"
-  - "src/monitor/__init__.py"
-  - "src/reports/__init__.py"
-  - "src/alerts/__init__.py"
-  - "tests/__init__.py"
+- src/__init__.py
+- src/monitor/__init__.py
+- src/reports/__init__.py
+- src/alerts/__init__.py
+- tests/__init__.py
 done_when:
-  - "Create src/__init__.py as an empty file (just a comment saying '# src package')"
-  - "Create src/monitor/__init__.py as an empty file (just a comment saying '# monitor package')"
-  - "Create src/reports/__init__.py as an empty file (just a comment saying '# reports package')"
-  - "Create src/alerts/__init__.py as an empty file (just a comment saying '# alerts package')"
-  - "Create tests/__init__.py as an empty file (just a comment saying '# tests package')"
+- Create src/__init__.py as an empty file (just a comment saying '# src package')
+- Create src/monitor/__init__.py as an empty file (just a comment saying '# monitor
+  package')
+- Create src/reports/__init__.py as an empty file (just a comment saying '# reports
+  package')
+- Create src/alerts/__init__.py as an empty file (just a comment saying '# alerts
+  package')
+- Create tests/__init__.py as an empty file (just a comment saying '# tests package')
 validate:
-  - "test -f src/__init__.py"
-  - "test -f src/monitor/__init__.py"
-  - "test -f src/reports/__init__.py"
-  - "test -f src/alerts/__init__.py"
-  - "test -f tests/__init__.py"
-status: "pending"
+- test -f src/__init__.py
+- test -f src/monitor/__init__.py
+- test -f src/reports/__init__.py
+- test -f src/alerts/__init__.py
+- test -f tests/__init__.py
+status: done
+metrics:
+  tokens_sent: '4100'
+  tokens_received: '103'
+  cost: 0.00021
+completed_at: '2026-03-05 00:24:31'
