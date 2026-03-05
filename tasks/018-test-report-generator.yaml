@@ -1,24 +1,30 @@
-id: "018"
-title: "test-report-generator"
-type: "test"
-risk: "low"
+id: 018
+title: test-report-generator
+type: test
+risk: low
 depends_on:
-  - "007"
+- '007'
 context_files:
-  - "tests/test_report_generator.py"
-  - "src/reports/report_generator.py"
+- tests/test_report_generator.py
+- src/reports/report_generator.py
 done_when:
-  - "Create tests/test_report_generator.py"
-  - "Import pytest"
-  - "Import generate_report, render_report_text from src.reports.report_generator"
-  - "Write a test function exactly named 'test_generate_report_returns_dict' that calls generate_report with sample data and asserts the result is a dict with keys: report_date, generated_at, summary, sites"
-  - "Write a test function exactly named 'test_summary_fields' that calls generate_report and asserts summary contains: total_sites, sites_up, sites_down, avg_response_time_ms, ssl_issues_count"
-  - "Write a test function exactly named 'test_render_report_text_returns_string' that calls render_report_text and asserts the result is a non-empty string"
-  - "Each test must use assert statements"
+- Create tests/test_report_generator.py
+- Import pytest
+- Import generate_report, render_report_text from src.reports.report_generator
+- 'Write a test function exactly named ''test_generate_report_returns_dict'' that
+  calls generate_report with sample data and asserts the result is a dict with keys:
+  report_date, generated_at, summary, sites'
+- 'Write a test function exactly named ''test_summary_fields'' that calls generate_report
+  and asserts summary contains: total_sites, sites_up, sites_down, avg_response_time_ms,
+  ssl_issues_count'
+- Write a test function exactly named 'test_render_report_text_returns_string' that
+  calls render_report_text and asserts the result is a non-empty string
+- Each test must use assert statements
 validate:
-  - "python3 -m py_compile tests/test_report_generator.py"
-  - "grep 'def test_generate_report_returns_dict' tests/test_report_generator.py"
-  - "grep 'def test_summary_fields' tests/test_report_generator.py"
-  - "grep 'def test_render_report_text_returns_string' tests/test_report_generator.py"
-  - "grep 'import pytest' tests/test_report_generator.py"
-status: "pending"
+- python3 -m py_compile tests/test_report_generator.py
+- grep 'def test_generate_report_returns_dict' tests/test_report_generator.py
+- grep 'def test_summary_fields' tests/test_report_generator.py
+- grep 'def test_render_report_text_returns_string' tests/test_report_generator.py
+- grep 'import pytest' tests/test_report_generator.py
+status: done
+completed_at: '2026-03-05 07:23:49'

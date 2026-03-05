@@ -1,0 +1,75 @@
+
+<change>
+# test-report-generator.py
+"""
+Unit tests for report generator functionality.
+"""
+import pytest
+from src.reports.report_generator import generate_report, render_report_text
+
+def test_generate_report_returns_dict():
+    """Test that generate_report returns a dictionary with required keys."""
+    uptime_results = [
+        {"name": "Example Corp", "status": "up", "response_time_ms": 100},
+        {"name": "Test Shop", "status": "down", "response_time_ms": 200},
+        {"name": "Local Bakery", "status": "up", "response_time_ms": 50}
+    ]
+    ssl_results = [
+        {"name": "Example Corp", "status": "issue", "days_remaining": 30},
+        {"name": "Test Shop", "status": "valid", "days_remaining": 60},
+        {"name": "Local Bakery", "status": "issue", "days_remaining": 15}
+    ]
+    speed_results = [
+        {"name": "Example Corp", "page_size_bytes": 1000},
+        {"name": "Test Shop", "page_size_bytes": 2000},
+        {"name": "Local Bakery", "page_size_bytes": 500}
+    ]
+    report_date = "2023-03-05"
+
+    report = generate_report(uptime_results, ssl_results, speed_results, report_date)
+    assert isinstance(report, dict)
+    assert "report_date" in report
+    assert "generated_at" in report
+    assert "summary" in report
+    assert "sites" in report["summary"]
+    assert "total_sites" in report["summary"]
+    assert "sites_up" in report["summary"]
+    assert "sites_down" in report["summary"]
+    assert "avg_response_time_ms" in report["summary"]
+    assert "ssl_issues_count" in report["summary"]
+
+def test_summary_fields():
+    """Test that summary fields are correctly populated."""
+    uptime_results = [
+        {"name": "Example Corp", "status": "up", "response_time_ms": 100},
+        {"name": "Test Shop", "status": "down", "response_time_ms": 200},
+        {"name": "Local Bakery", "status": "up", "response_time_ms": 50}
+    ]
+    ssl_results = [
+        {"name": "Example Corp", "status": "issue", "days_remaining": 30},
+        {"name": "Test Shop", "status": "valid", "days_remaining": 60},
+        {"name": "Local Bakery", "status": "issue", "days_remaining": 15}
+    ]
+    speed_results = [
+        {"name": "Example Corp", "page_size_bytes": 1000},
+        {"name": "Test Shop", "page_size_bytes": 2000},
+        {"name": "Local Bakery", "page_size_bytes": 500}
+    ]
+
+    report = generate_report(uptime_results, ssl_results, speed_results, "2023-03-05")
+    assert report["summary"]["total_sites"] == 3
+    assert report["summary"]["sites_up"] == 2
+    assert report["summary"]["sites_down"] == 1
+    assert report["summary"]["avg_response_time_ms"] == 125
+    assert report["summary"]["ssl_issues_count"] == 2
+
+def test_render_report_text_returns_string():
+    """Test that render_report_text returns a non-empty string."""
+    report = generate_report(uptime_results, ssl_results, speed_results, "2023-03-05")
+    assert isinstance(report, str)
+    assert report.strip() != ""
+    assert "Report Date" in report
+
+# Run tests
+if __name__ == "__main__":
+    pytest.main([__file__])
