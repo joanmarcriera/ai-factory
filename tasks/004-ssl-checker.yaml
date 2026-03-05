@@ -1,27 +1,41 @@
-id: "004"
-title: "ssl-checker"
-type: "feature"
-risk: "medium"
+id: '004'
+title: ssl-checker
+type: feature
+risk: medium
 depends_on:
-  - "002"
+- '002'
 context_files:
-  - "src/monitor/ssl_checker.py"
+- src/monitor/ssl_checker.py
 done_when:
-  - "Create src/monitor/ssl_checker.py"
-  - "Import ssl and socket from the standard library"
-  - "Define a function exactly named 'check_ssl' that takes a hostname string and a port integer (default 443)"
-  - "The function must connect to the host using ssl.create_default_context and retrieve the certificate"
-  - "It must return a dictionary with keys: hostname, issuer, subject, not_before, not_after, days_until_expiry, is_valid, error"
-  - "days_until_expiry must be an integer calculated from the certificate's notAfter date minus today"
-  - "is_valid must be True if the certificate is valid and has more than 0 days until expiry"
-  - "If the SSL connection fails, is_valid must be False and error must contain the error message"
-  - "Define a function exactly named 'check_ssl_for_sites' that takes a list of site dictionaries, checks SSL for sites where ssl_check is True, and returns a list of result dictionaries"
-  - "Add a if __name__ == '__main__' block that loads sites from config and checks SSL, printing results as JSON"
+- Create src/monitor/ssl_checker.py
+- Import ssl and socket from the standard library
+- Define a function exactly named 'check_ssl' that takes a hostname string and a port
+  integer (default 443)
+- The function must connect to the host using ssl.create_default_context and retrieve
+  the certificate
+- 'It must return a dictionary with keys: hostname, issuer, subject, not_before, not_after,
+  days_until_expiry, is_valid, error'
+- days_until_expiry must be an integer calculated from the certificate's notAfter
+  date minus today
+- is_valid must be True if the certificate is valid and has more than 0 days until
+  expiry
+- If the SSL connection fails, is_valid must be False and error must contain the error
+  message
+- Define a function exactly named 'check_ssl_for_sites' that takes a list of site
+  dictionaries, checks SSL for sites where ssl_check is True, and returns a list of
+  result dictionaries
+- Add a if __name__ == '__main__' block that loads sites from config and checks SSL,
+  printing results as JSON
 validate:
-  - "python3 -m py_compile src/monitor/ssl_checker.py"
-  - "grep 'def check_ssl' src/monitor/ssl_checker.py"
-  - "grep 'def check_ssl_for_sites' src/monitor/ssl_checker.py"
-  - "grep 'days_until_expiry' src/monitor/ssl_checker.py"
-  - "grep 'import ssl' src/monitor/ssl_checker.py"
-  - "grep 'is_valid' src/monitor/ssl_checker.py"
-status: "pending"
+- python3 -m py_compile src/monitor/ssl_checker.py
+- grep 'def check_ssl' src/monitor/ssl_checker.py
+- grep 'def check_ssl_for_sites' src/monitor/ssl_checker.py
+- grep 'days_until_expiry' src/monitor/ssl_checker.py
+- grep 'import ssl' src/monitor/ssl_checker.py
+- grep 'is_valid' src/monitor/ssl_checker.py
+status: done
+metrics:
+  tokens_sent: '4300'
+  tokens_received: '700'
+  cost: 0.00027
+completed_at: '2026-03-05 00:25:45'
