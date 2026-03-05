@@ -27,5 +27,5 @@ validate:
   - "grep 'def save_report' src/reports/report_generator.py"
   - "grep 'total_sites' src/reports/report_generator.py"
   - "grep 'sites_up' src/reports/report_generator.py"
-  - "grep 'report_YYYY-MM-DD' src/reports/report_generator.py"
-status: "pending"
+  - "grep 'report_.*report_date' src/reports/report_generator.py"
+status: done

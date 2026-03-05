@@ -1,0 +1,24 @@
+id: "015"
+title: "project-readme"
+type: "documentation"
+risk: "low"
+depends_on:
+  - "008"
+context_files:
+  - "README.md"
+guardrails: "skip"
+done_when:
+  - "Create README.md"
+  - "Include a project title: Website Monitoring & Maintenance Service"
+  - "Include a Features section listing: uptime monitoring, SSL certificate checking, page speed analysis, configurable alerts, automated reports"
+  - "Include a Quick Start section with steps: clone repo, run scripts/setup.sh, edit config/sites.yaml, run python src/monitor/runner.py"
+  - "Include a Configuration section explaining config/sites.yaml format with fields: name, url, check_interval_minutes, alert_threshold_ms, ssl_expiry_warning_days"
+  - "Include a Docker section showing docker compose up command"
+  - "Include a Project Structure section showing the src/ directory layout"
+validate:
+  - "grep 'Website Monitoring' README.md"
+  - "grep 'Quick Start' README.md"
+  - "grep 'sites.yaml' README.md"
+  - "grep 'docker' README.md"
+  - "grep 'Project Structure' README.md"
+status: "pending"

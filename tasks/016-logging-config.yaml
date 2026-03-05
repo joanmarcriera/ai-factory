@@ -1,0 +1,32 @@
+id: '016'
+title: logging-configuration
+type: feature
+risk: low
+depends_on:
+- '002'
+context_files:
+- src/monitor/logger.py
+done_when:
+- Create src/monitor/logger.py
+- Import the logging module from Python standard library
+- Define a function exactly named 'setup_logger' that takes a name string and an optional
+  log_level parameter defaulting to logging.INFO
+- setup_logger must create and return a logger with both a StreamHandler for console
+  output and a FileHandler writing to logs/monitor.log
+- The log format must include timestamp, logger name, level, and message
+- setup_logger must create the logs directory if it does not exist using os.makedirs
+- Define a module-level variable exactly named 'default_logger' that calls setup_logger
+  with name 'monitor'
+validate:
+- python3 -m py_compile src/monitor/logger.py
+- grep 'def setup_logger' src/monitor/logger.py
+- grep 'StreamHandler' src/monitor/logger.py
+- grep 'FileHandler' src/monitor/logger.py
+- grep 'default_logger' src/monitor/logger.py
+- grep 'makedirs' src/monitor/logger.py
+status: done
+metrics:
+  tokens_sent: '4600'
+  tokens_received: '644'
+  cost: 0.00028
+completed_at: '2026-03-05 07:10:33'

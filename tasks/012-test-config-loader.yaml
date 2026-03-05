@@ -23,4 +23,4 @@ validate:
   - "grep 'def test_validate_site_missing_key' tests/test_config_loader.py"
   - "grep 'def test_load_sites_file_not_found' tests/test_config_loader.py"
   - "grep 'import pytest' tests/test_config_loader.py"
-status: "pending"
+status: done

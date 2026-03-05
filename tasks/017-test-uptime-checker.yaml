@@ -1,0 +1,24 @@
+id: "017"
+title: "test-uptime-checker"
+type: "test"
+risk: "low"
+depends_on:
+  - "003"
+context_files:
+  - "tests/test_uptime_checker.py"
+  - "src/monitor/uptime_checker.py"
+done_when:
+  - "Create tests/test_uptime_checker.py"
+  - "Import pytest and unittest.mock.patch"
+  - "Import check_uptime from src.monitor.uptime_checker"
+  - "Write a test function exactly named 'test_check_uptime_success' that mocks requests.get to return status_code 200 and response time 0.5 seconds, then asserts the result dict has is_up=True"
+  - "Write a test function exactly named 'test_check_uptime_failure' that mocks requests.get to raise a requests.exceptions.ConnectionError, then asserts the result dict has is_up=False"
+  - "Write a test function exactly named 'test_check_uptime_returns_dict' that mocks requests.get and asserts the return value is a dictionary with keys: site_name, url, is_up, status_code, response_time_ms, timestamp"
+  - "Each test must use assert statements"
+validate:
+  - "python3 -m py_compile tests/test_uptime_checker.py"
+  - "grep 'def test_check_uptime_success' tests/test_uptime_checker.py"
+  - "grep 'def test_check_uptime_failure' tests/test_uptime_checker.py"
+  - "grep 'def test_check_uptime_returns_dict' tests/test_uptime_checker.py"
+  - "grep 'unittest.mock' tests/test_uptime_checker.py"
+status: "pending"

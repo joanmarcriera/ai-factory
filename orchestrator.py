@@ -22,6 +22,7 @@ load_env()
 # --- Configuration ---
 CONFIG = {
     "model": os.environ.get("AI_MODEL", "anthropic/claude-3-5-sonnet-latest"),
+    "fallback_models": [m.strip() for m in os.environ.get("AI_FALLBACK_MODELS", "").split(",") if m.strip()],
     "max_retries": 2,
     "log_file": ".orchestrator/log.txt",
     "verbose": 0  # 0: normal, 1: verbose, 2: debug
@@ -163,9 +164,9 @@ def get_ready_tasks():
 
     return ready
 
-def run_aider(task, context_files, prompt):
+def run_aider(task, context_files, prompt, model_override=None):
     """Call Aider and return the subprocess result."""
-    aider_model = CONFIG["model"]
+    aider_model = model_override or CONFIG["model"]
 
     cmd = [
         "aider",
@@ -185,7 +186,7 @@ def run_aider(task, context_files, prompt):
             log(f"Creating directory {cf_path.parent}", level=1)
             cf_path.parent.mkdir(parents=True, exist_ok=True)
 
-    api_key_vars = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GROQ_API_KEY", "OPENROUTER_API_KEY"]
+    api_key_vars = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GROQ_API_KEY", "OPENROUTER_API_KEY", "GEMINI_API_KEY", "CEREBRAS_API_KEY"]
     if not any(os.environ.get(k) for k in api_key_vars):
         log("CRITICAL ERROR: No API key found! Set one of: " + ", ".join(api_key_vars), level=0)
 
@@ -214,6 +215,11 @@ def check_false_success(result):
     stdout_lower = result.stdout.lower() if result.stdout else ""
     return any(err in stdout_lower for err in ["badrequesterror", "llm provider not provided", "notfounderror"])
 
+def check_rate_limited(result):
+    """Detect rate limit errors in Aider output."""
+    combined = ((result.stdout or "") + (result.stderr or "")).lower()
+    return any(s in combined for s in ["rate_limit", "rate limit", "ratelimit", "429", "too many requests", "quota exceeded"])
+
 def run_task_validations(task, aider_result):
     """Run task-specific validate: commands. Returns (passed, errors)."""
     errors = []
@@ -237,9 +243,18 @@ def execute_task(task_file, task):
     max_retries = CONFIG["max_retries"]
     retry_errors = None
 
-    for attempt in range(1, max_retries + 1):
+    model_override = None
+    attempt = 0
+    # Build model chain: primary + fallbacks
+    all_models = [CONFIG["model"]] + CONFIG.get("fallback_models", [])
+    current_model_idx = 0
+
+    while attempt < max_retries:
+        attempt += 1
+        current_model = all_models[current_model_idx]
         attempt_label = f"(attempt {attempt}/{max_retries})" if max_retries > 1 else ""
-        log(f"Executing task {task['id']}: {task['title']} {attempt_label}", level=0)
+        model_label = f" [{current_model}]"
+        log(f"Executing task {task['id']}: {task['title']} {attempt_label}{model_label}", level=0)
 
         # Snapshot line counts before Aider runs
         pre_line_counts = snapshot_line_counts(context_files)
@@ -248,13 +263,27 @@ def execute_task(task_file, task):
         prompt = build_prompt(task, retry_errors=retry_errors)
 
         # Run Aider
-        result = run_aider(task, context_files, prompt)
+        model_override = current_model if current_model_idx > 0 else None
+        result = run_aider(task, context_files, prompt, model_override=model_override)
 
         # Extract metrics
         metrics = extract_metrics(result.stdout)
         if metrics:
             log(f"Metrics: Sent={metrics['tokens_sent']}, Received={metrics['tokens_received']}, Cost=${metrics['cost']:.4f}", level=1)
             task["metrics"] = metrics
+
+        # Check rate limiting — advance to next model in chain
+        if check_rate_limited(result):
+            if current_model_idx + 1 < len(all_models):
+                next_model = all_models[current_model_idx + 1]
+                log(f"{task['id']} ⚠ Rate limited on {current_model}. Falling back to {next_model}", level=0)
+                current_model_idx += 1
+                attempt -= 1  # Don't count fallback switch as a real attempt
+                continue
+            else:
+                log(f"{task['id']} ✗ Rate limited on all models ({', '.join(all_models)}).", level=0)
+                retry_errors = ["Rate limited by all API providers"]
+                continue
 
         # Check exit code
         if result.returncode != 0:
@@ -264,8 +293,13 @@ def execute_task(task_file, task):
             retry_errors = [f"Aider exited with code {result.returncode}"]
             continue
 
-        # Check false success
+        # Check false success — also check for rate limit in false success cases
         if check_false_success(result):
+            if check_rate_limited(result) and current_model_idx + 1 < len(all_models):
+                next_model = all_models[current_model_idx + 1]
+                log(f"{task['id']} ⚠ Rate limited (false success). Falling back to {next_model}", level=0)
+                current_model_idx += 1
+                continue
             log(f"{task['id']} ✗ Aider reported success but LiteLLM/API failed.", level=0)
             log(f"--- AIDER STDOUT ---\n{result.stdout}", level=0)
             return False

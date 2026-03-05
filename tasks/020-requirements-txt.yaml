@@ -1,0 +1,20 @@
+id: "020"
+title: "requirements-txt"
+type: "infrastructure"
+risk: "low"
+depends_on:
+  - "003"
+context_files:
+  - "requirements.txt"
+guardrails: "skip"
+done_when:
+  - "Create requirements.txt"
+  - "Include requests>=2.31.0"
+  - "Include pyyaml>=6.0"
+  - "Include pytest>=7.0 as a dev dependency comment"
+  - "Add a comment at the top: # Website Monitoring & Maintenance Service - Dependencies"
+validate:
+  - "grep 'requests' requirements.txt"
+  - "grep 'pyyaml' requirements.txt"
+  - "grep 'pytest' requirements.txt"
+status: "pending"

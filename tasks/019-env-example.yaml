@@ -1,0 +1,26 @@
+id: "019"
+title: "env-example-file"
+type: "infrastructure"
+risk: "low"
+depends_on:
+  - "001"
+context_files:
+  - ".env.example"
+guardrails: "skip"
+done_when:
+  - "Create .env.example"
+  - "Include SMTP_HOST=smtp.example.com"
+  - "Include SMTP_PORT=587"
+  - "Include SMTP_USER=your-email@example.com"
+  - "Include SMTP_PASS=your-password"
+  - "Include WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url"
+  - "Include CHECK_INTERVAL_MINUTES=30"
+  - "Include REPORT_OUTPUT_DIR=reports_output"
+  - "Add comments above each variable explaining its purpose"
+validate:
+  - "grep 'SMTP_HOST' .env.example"
+  - "grep 'SMTP_PORT' .env.example"
+  - "grep 'WEBHOOK_URL' .env.example"
+  - "grep 'CHECK_INTERVAL' .env.example"
+  - "grep 'REPORT_OUTPUT_DIR' .env.example"
+status: "pending"
