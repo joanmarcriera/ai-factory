@@ -11,15 +11,21 @@ properties:
         url:
           type: string
           description: URL of the website
-        check_interval_seconds:
+        check_interval_minutes:
           type: integer
-          description: Interval in seconds to check the website
+          description: Interval in minutes to check the website
         ssl_check:
           type: boolean
           description: Check for SSL certificate expiration
         speed_check:
           type: boolean
           description: Check for page speed
+        alert_threshold_ms:
+          type: integer
+          description: Response time threshold in milliseconds to trigger alerts
+        ssl_expiry_warning_days:
+          type: integer
+          description: Number of days before SSL expiry to generate warning alerts
         alert_email:
           type: string
           description: Email address to send alerts to

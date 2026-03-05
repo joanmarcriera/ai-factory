@@ -6,8 +6,8 @@ from src.alerts.alert_engine import evaluate_alerts, format_alert_text
 
 def test_site_down_generates_critical_alert():
     uptime_results = [
-        {'site_name': 'Example Corp', 'is_up': False, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 4000},
-        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000}
+        {'site_name': 'Example Corp', 'is_up': False, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 4000, 'alert_threshold_ms': 3000},
+        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000, 'alert_threshold_ms': 3000}
     ]
     alerts = evaluate_alerts(uptime_results, [])
     assert len(alerts) == 1
@@ -17,8 +17,8 @@ def test_site_down_generates_critical_alert():
 
 def test_ssl_expiring_generates_warning():
     ssl_results = [
-        {'site_name': 'Example Corp', 'days_until_expiry': 7, 'timestamp': '2023-03-01 12:00:00'},
-        {'site_name': 'Test Shop', 'days_until_expiry': 15, 'timestamp': '2023-03-01 12:00:00'}
+        {'site_name': 'Example Corp', 'days_until_expiry': 7, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14},
+        {'site_name': 'Test Shop', 'days_until_expiry': 15, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14}
     ]
     alerts = evaluate_alerts([], ssl_results)
     assert len(alerts) == 1
@@ -28,12 +28,12 @@ def test_ssl_expiring_generates_warning():
 
 def test_no_alerts_when_healthy():
     uptime_results = [
-        {'site_name': 'Example Corp', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000},
-        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000}
+        {'site_name': 'Example Corp', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000, 'alert_threshold_ms': 3000},
+        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000, 'alert_threshold_ms': 3000}
     ]
     ssl_results = [
-        {'site_name': 'Example Corp', 'days_until_expiry': 30, 'timestamp': '2023-03-01 12:00:00'},
-        {'site_name': 'Test Shop', 'days_until_expiry': 30, 'timestamp': '2023-03-01 12:00:00'}
+        {'site_name': 'Example Corp', 'days_until_expiry': 30, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14},
+        {'site_name': 'Test Shop', 'days_until_expiry': 30, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14}
     ]
     alerts = evaluate_alerts(uptime_results, ssl_results)
     assert len(alerts) == 0

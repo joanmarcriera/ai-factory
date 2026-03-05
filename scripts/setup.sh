@@ -11,21 +11,27 @@ if [ ! -f config/sites.yaml ]; then
 sites:
   - name: Example Corp
     url: https://example.com
-    check_interval_seconds: 300
+    check_interval_minutes: 5
     ssl_check: true
     speed_check: true
+    alert_threshold_ms: 3000
+    ssl_expiry_warning_days: 14
     alert_email: examplecorp@example.com
   - name: Test Shop
     url: https://test-shop.example.org
-    check_interval_seconds: 300
+    check_interval_minutes: 5
     ssl_check: true
     speed_check: true
+    alert_threshold_ms: 3000
+    ssl_expiry_warning_days: 14
     alert_email: testshop@example.org
   - name: Local Bakery
     url: https://localbakery.co.uk
-    check_interval_seconds: 300
+    check_interval_minutes: 5
     ssl_check: true
     speed_check: true
+    alert_threshold_ms: 3000
+    ssl_expiry_warning_days: 14
     alert_email: localbakery@localbakery.co.uk
 EOF
 else

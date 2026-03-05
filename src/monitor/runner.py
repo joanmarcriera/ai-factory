@@ -18,15 +18,24 @@ def run_checks(config_path: str = 'config/sites.yaml', output_dir: str = 'report
     # Create mappings
     url_to_name = {site['url']: site['name'] for site in sites}
     hostname_to_name = {}
+    url_to_site = {site['url']: site for site in sites}
+    hostname_to_site = {}
     for site in sites:
         hostname = urlparse(site['url']).hostname
         if hostname:
             hostname_to_name[hostname] = site['name']
+            hostname_to_site[hostname] = site
     
     # Transform uptime results
     transformed_uptime = []
     for result in raw_uptime:
-        site_name = url_to_name.get(result['url'], result['url'])
+        site = url_to_site.get(result['url'])
+        if site:
+            site_name = site['name']
+            alert_threshold_ms = site['alert_threshold_ms']
+        else:
+            site_name = url_to_name.get(result['url'], result['url'])
+            alert_threshold_ms = 3000  # default
         transformed = {
             'site_name': site_name,
             'name': site_name,
@@ -36,7 +45,8 @@ def run_checks(config_path: str = 'config/sites.yaml', output_dir: str = 'report
             'response_time_ms': result['response_time_ms'],
             'timestamp': result['checked_at'],
             'error': result['error'],
-            'status_code': result['status_code']
+            'status_code': result['status_code'],
+            'alert_threshold_ms': alert_threshold_ms
         }
         transformed_uptime.append(transformed)
     
@@ -44,13 +54,19 @@ def run_checks(config_path: str = 'config/sites.yaml', output_dir: str = 'report
     transformed_ssl = []
     for result in raw_ssl:
         hostname = result['hostname']
-        site_name = hostname_to_name.get(hostname, hostname)
+        site = hostname_to_site.get(hostname)
+        if site:
+            site_name = site['name']
+            ssl_expiry_warning_days = site['ssl_expiry_warning_days']
+        else:
+            site_name = hostname_to_name.get(hostname, hostname)
+            ssl_expiry_warning_days = 14  # default
         days = result['days_until_expiry']
         is_valid = result['is_valid']
         if not is_valid:
             status = 'issue'
         else:
-            status = 'issue' if days <= 30 else 'valid'
+            status = 'issue' if days <= ssl_expiry_warning_days else 'valid'
         transformed = {
             'site_name': site_name,
             'name': site_name,
@@ -60,7 +76,8 @@ def run_checks(config_path: str = 'config/sites.yaml', output_dir: str = 'report
             'is_valid': is_valid,
             'status': status,
             'timestamp': datetime.now().isoformat(),
-            'error': result.get('error')
+            'error': result.get('error'),
+            'ssl_expiry_warning_days': ssl_expiry_warning_days
         }
         transformed_ssl.append(transformed)
     

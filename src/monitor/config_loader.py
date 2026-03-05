@@ -6,7 +6,7 @@ def load_sites(file_path='config/sites.yaml'):
     return sites['sites']
 
 def validate_site(site):
-    required_keys = ['name', 'url', 'check_interval_seconds', 'ssl_check', 'speed_check', 'alert_email']
+    required_keys = ['name', 'url', 'check_interval_minutes', 'ssl_check', 'speed_check', 'alert_threshold_ms', 'ssl_expiry_warning_days', 'alert_email']
     return all(key in site for key in required_keys)
 
 def load_and_validate(file_path='config/sites.yaml'):

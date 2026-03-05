@@ -21,7 +21,7 @@ def evaluate_alerts(uptime_results: List[Dict], ssl_results: List[Dict]) -> List
                 'message': f"SSL certificate for {result['site_name']} has expired",
                 'triggered_at': result['timestamp']
             })
-        elif result['days_until_expiry'] <= 14:
+        elif result['days_until_expiry'] <= result.get('ssl_expiry_warning_days', 14):
             alerts.append({
                 'site_name': result['site_name'],
                 'alert_type': 'ssl_expiring',
@@ -30,7 +30,7 @@ def evaluate_alerts(uptime_results: List[Dict], ssl_results: List[Dict]) -> List
                 'triggered_at': result['timestamp']
             })
     for result in uptime_results:
-        if result['response_time_ms'] > 3000:
+        if result['response_time_ms'] > result.get('alert_threshold_ms', 3000):
             alerts.append({
                 'site_name': result['site_name'],
                 'alert_type': 'slow_response',
@@ -52,12 +52,12 @@ def send_webhook_alert(webhook_url: str, alert: Dict) -> None:
 
 if __name__ == '__main__':
     uptime_results = [
-        {'site_name': 'Example Corp', 'is_up': False, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 4000},
-        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000}
+        {'site_name': 'Example Corp', 'is_up': False, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 4000, 'alert_threshold_ms': 3000},
+        {'site_name': 'Test Shop', 'is_up': True, 'timestamp': '2023-03-01 12:00:00', 'response_time_ms': 2000, 'alert_threshold_ms': 3000}
     ]
     ssl_results = [
-        {'site_name': 'Example Corp', 'days_until_expiry': 0, 'timestamp': '2023-03-01 12:00:00'},
-        {'site_name': 'Test Shop', 'days_until_expiry': 15, 'timestamp': '2023-03-01 12:00:00'}
+        {'site_name': 'Example Corp', 'days_until_expiry': 0, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14},
+        {'site_name': 'Test Shop', 'days_until_expiry': 15, 'timestamp': '2023-03-01 12:00:00', 'ssl_expiry_warning_days': 14}
     ]
     alerts = evaluate_alerts(uptime_results, ssl_results)
     for alert in alerts:

@@ -21,4 +21,4 @@ validate:
   - "grep 'sites.yaml' README.md"
   - "grep 'docker' README.md"
   - "grep 'Project Structure' README.md"
-status: "pending"
+status: "done"
