@@ -4,17 +4,18 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy pyproject.toml first for dependency caching
+COPY pyproject.toml .
 
-# Install any needed packages specified in requirements.txt
+# Install pip dependencies using pip install with no cache
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 3001 available to the world outside this container
-EXPOSE 3001
+# Copy the src directory and config directory into the container
+COPY src ./src
+COPY config ./config
 
-# Define environment variable
-ENV NAME World
+# Add a LABEL maintainer with value 'ai-factory'
+LABEL maintainer="ai-factory"
 
-# Run app.py when the container launches
-CMD ["uv", "run", "app.py"]
+# Set the default CMD to python src/monitor/runner.py
+CMD ["python", "src/monitor/runner.py"]
