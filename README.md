@@ -1,5 +1,7 @@
 # Website Monitoring & Maintenance Service
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Automated website health monitoring with uptime checks, SSL certificate validation, page speed analysis, configurable alerts, and automated reports.
 
 ## Features
